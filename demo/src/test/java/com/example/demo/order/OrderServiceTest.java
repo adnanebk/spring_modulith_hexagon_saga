@@ -1,24 +1,26 @@
 package com.example.demo.order;
 
-import com.example.demo.common.enums.OrderStatus;
+import com.example.demo.order.domain.models.OrderStatus;
 import com.example.demo.common.enums.PaymentType;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.order.application.OrderService;
-import com.example.demo.order.domain.models.OrderShipping;
-import com.example.demo.order.domain.models.OrderInput;
-import com.example.demo.order.domain.models.OrderItem;
-import com.example.demo.order.domain.models.OrderPayment;
+import com.example.demo.common.models.OrderShipping;
+import com.example.demo.common.models.OrderInput;
+import com.example.demo.common.models.OrderItem;
+import com.example.demo.common.models.OrderPayment;
 import com.example.demo.order.domain.ports.out.OrderRepoPort;
 import com.example.demo.stock.infra.entities.ProductEntity;
 import com.example.demo.stock.infra.repo.ProductSpringRepo;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.modulith.events.IncompleteEventPublications;
 import org.springframework.modulith.test.EnableScenarios;
 import org.springframework.modulith.test.Scenario;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.List;
@@ -47,6 +49,7 @@ class OrderServiceTest {
     private IncompleteEventPublications incompleteEventPublications;
 
     @Test
+    @Order(1)
     public void testPlaceOrderSuccess(Scenario scenario)  {
         var products = createProducts();
         productSpringRepo.saveAll(products);
@@ -61,6 +64,7 @@ class OrderServiceTest {
                 }));
     }
     @Test
+    @Order(2)
     public void testPlaceOrderPaymentFailed(Scenario scenario)  {
         var products = createProducts();
         productSpringRepo.saveAll(products);
@@ -76,6 +80,7 @@ class OrderServiceTest {
                 }));
     }
     @Test
+    @Order(3)
     public void testItemStockFailed(Scenario scenario)  {
         var products = createProducts();
         products.get(0).setAmountInStock(1);
@@ -91,14 +96,13 @@ class OrderServiceTest {
                     Assertions.assertEquals(1,savedProducts.get(0).getAmountInStock());
                 }));
     }
-    private static OrderInput createOrder() {
+    private  OrderInput createOrder() {
         OrderItem i1 = new OrderItem("",10.0,2,1);
         OrderItem i2 = new OrderItem("",10.0,2,2);
         OrderInput order = new OrderInput();
         order.setItems(List.of(i1,i2));
         order.setTotal(10.0);
-        order.setStatus(OrderStatus.PENDING);
-        order.setOrderShipping(new OrderShipping());
+        order.setShipping(new OrderShipping());
         order.setPaymentInfo(new OrderPayment(PaymentType.CASH));
         return order;
     }

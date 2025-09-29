@@ -1,7 +1,7 @@
 package com.example.demo.stock.application;
 
 
-import com.example.demo.common.eventsdata.OrderItemEventData;
+import com.example.demo.common.models.OrderItem;
 import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import com.example.demo.stock.domain.models.Product;
 import com.example.demo.stock.domain.ports.in.ProductRepoPort;
@@ -17,8 +17,8 @@ public class StockEventService {
         this.productRepoPort = productRepoPort;
     }
 
-    public void updateStock(List<OrderItemEventData> items) {
-        List<Product> products = productRepoPort.getAllByIds(items.stream().map(OrderItemEventData::getProductId).toList());
+    public void updateStock(List<OrderItem> items) {
+        List<Product> products = productRepoPort.getAllByIds(items.stream().map(OrderItem::getProductId).toList());
         for (Product product : products) {
             int itemQuantity = getItemQuantity(items, product);
 
@@ -30,8 +30,8 @@ public class StockEventService {
         productRepoPort.saveAll(products);
     }
 
-    public void rollbackStock(List<OrderItemEventData> items) {
-        List<Product> products = productRepoPort.getAllByIds(items.stream().map(OrderItemEventData::getProductId).toList());
+    public void rollbackStock(List<OrderItem> items) {
+        List<Product> products = productRepoPort.getAllByIds(items.stream().map(OrderItem::getProductId).toList());
         for (Product product : products) {
             int itemQuantity = getItemQuantity(items, product);
             product.setAmountInStock(product.getAmountInStock() + itemQuantity);
@@ -39,9 +39,9 @@ public class StockEventService {
         productRepoPort.saveAll(products);
     }
 
-    private  Integer getItemQuantity(List<OrderItemEventData> items, Product product) {
+    private  Integer getItemQuantity(List<OrderItem> items, Product product) {
         return items.stream().filter(item -> item.getProductId().equals(product.getId()))
                 .findFirst()
-                .map(OrderItemEventData::getQuantity).orElse(0);
+                .map(OrderItem::getQuantity).orElse(0);
     }
 }

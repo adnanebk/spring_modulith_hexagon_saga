@@ -1,6 +1,6 @@
-package com.example.demo.common.eventsdata;
+package com.example.demo.common.models;
 
-public class OrderItemEventData {
+public class OrderItem {
 
     private Integer id;
     private String name;
@@ -8,13 +8,14 @@ public class OrderItemEventData {
     private Integer quantity;
     private Integer productId;
 
-    public OrderItemEventData(String name, Double price, Integer quantity) {
+    public OrderItem(String name, Double price, Integer quantity, Integer productId) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.productId = productId;
     }
 
-    public OrderItemEventData() {
+    public OrderItem() {
 
     }
 

@@ -1,6 +1,6 @@
 package com.example.demo.order.domain.ports.out;
 
-import com.example.demo.order.domain.models.OrderItem;
+import com.example.demo.common.models.OrderItem;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
-package com.example.demo.order.domain.models;
+package com.example.demo.common.models;
 
-import com.example.demo.common.enums.OrderStatus;
 
 import java.util.List;
 
@@ -9,8 +8,7 @@ public class OrderInput {
     private Integer  id;
     private List<OrderItem> items;
     private Double total;
-    private OrderStatus status;
-    private OrderShipping orderShipping;
+    private OrderShipping shipping;
     private OrderPayment paymentInfo;
 
 
@@ -31,9 +29,6 @@ public class OrderInput {
         this.total = total;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
 
     public List<OrderItem> getItems() {
         return items;
@@ -43,12 +38,9 @@ public class OrderInput {
         this.items = items;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
 
-    public OrderShipping getOrderShipping() {
-        return orderShipping;
+    public OrderShipping getShipping() {
+        return shipping;
     }
 
     public OrderPayment getPaymentInfo() {
@@ -59,8 +51,8 @@ public class OrderInput {
         this.paymentInfo = paymentInfo;
     }
 
-    public void setOrderShipping(OrderShipping orderShipping) {
-        this.orderShipping = orderShipping;
+    public void setShipping(OrderShipping shipping) {
+        this.shipping = shipping;
     }
 
 }

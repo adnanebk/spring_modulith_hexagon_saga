@@ -1,11 +1,10 @@
 package com.example.demo.order.application;
 
-import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
-import com.example.demo.common.eventsdata.OrderEventData;
+import com.example.demo.common.models.OrderInput;
 import com.example.demo.order.domain.ports.out.OrderRepoPort;
-import org.springframework.context.event.EventListener;
+import com.example.demo.order.domain.models.OrderStatus;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +19,15 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderCanceledEvent event){
-        OrderEventData order = event.getOrder();
-        orderRepoPort.update(order.getId(), OrderStatus.CANCELLED, order.getPaymentId(), order.getShippingId());
+        OrderInput order = event.getOrder();
+        orderRepoPort.update(order.getId(), OrderStatus.CANCELLED, order.getPaymentInfo().getId(), order.getShipping().getId());
 
 
     }
 
     @ApplicationModuleListener
     public void handle(OrderShippedEvent event){
-        OrderEventData order = event.getOrder();
-        orderRepoPort.update(order.getId(), OrderStatus.COMPLETED, order.getPaymentId(), order.getShippingId());
+        OrderInput order = event.getOrder();
+        orderRepoPort.update(order.getId(), OrderStatus.COMPLETED,order.getPaymentInfo().getId(), order.getShipping().getId());
     }
 }

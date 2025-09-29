@@ -1,10 +1,9 @@
 package com.example.demo.stock.infra.repo;
 
 import com.example.demo.stock.domain.models.Product;
-import com.example.demo.stock.infra.mappers.ProductMapper;
 import com.example.demo.stock.domain.ports.in.ProductRepoPort;
+import com.example.demo.stock.infra.mappers.ProductMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

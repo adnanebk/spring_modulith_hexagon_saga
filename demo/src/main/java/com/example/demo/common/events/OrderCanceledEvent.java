@@ -1,16 +1,16 @@
 package com.example.demo.common.events;
 
 import com.example.demo.common.enums.OrderCancellingCause;
-import com.example.demo.common.eventsdata.OrderEventData;
+import com.example.demo.common.models.OrderInput;
 
 public class OrderCanceledEvent {
-    private OrderEventData order;
+    private OrderInput order;
     private OrderCancellingCause orderCancellingCause;
-    public OrderCanceledEvent(OrderEventData order, OrderCancellingCause orderCancellingCause) {
+    public OrderCanceledEvent(OrderInput order, OrderCancellingCause orderCancellingCause) {
         this.order = order;
         this.orderCancellingCause = orderCancellingCause;
     }
-    public OrderEventData getOrder() {
+    public OrderInput getOrder() {
         return order;
     }
 

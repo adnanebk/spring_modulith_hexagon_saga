@@ -1,4 +1,4 @@
-package com.example.demo.order.domain.models;
+package com.example.demo.common.models;
 
 import com.example.demo.common.enums.PaymentType;
 

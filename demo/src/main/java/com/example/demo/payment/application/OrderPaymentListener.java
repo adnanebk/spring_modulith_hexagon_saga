@@ -5,7 +5,7 @@ import com.example.demo.common.enums.PaymentType;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderPayedEvent;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
-import com.example.demo.common.eventsdata.OrderEventData;
+import com.example.demo.common.models.OrderPayment;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -21,12 +21,12 @@ private ApplicationEventPublisher publisher;
 
     @EventListener
     public void handle(OrderProductStockVerifiedEvent event){
-       OrderEventData paymentInfo = event.getOrder();
-            if(paymentInfo.getPaymentType().equals(PaymentType.PAYPAL)) {
+        OrderPayment paymentInfo = event.getOrder().getPaymentInfo();
+            if(paymentInfo.getType().equals(PaymentType.PAYPAL)) {
                 publisher.publishEvent(new OrderCanceledEvent(event.getOrder(), OrderCancellingCause.PAYMENT_FAILED));
                 return;
             }
-            paymentInfo.setPaymentId(1);
+            paymentInfo.setId(1);
             publisher.publishEvent(new OrderPayedEvent(event.getOrder()));
     }
 
