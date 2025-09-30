@@ -8,6 +8,7 @@ import com.example.demo.stock.domain.ports.in.ProductRepoPort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockEventService {
@@ -18,23 +19,28 @@ public class StockEventService {
     }
 
     public void updateStock(List<OrderItem> items) {
-        List<Product> products = productRepoPort.getAllByIds(items.stream().map(OrderItem::getProductId).toList());
-        for (Product product : products) {
-            int itemQuantity = getItemQuantity(items, product);
+        List<Product> products = getCorrespondingProducts(items);
+        for (OrderItem item : items) {
+            Optional<Product> correspondedProduct = getCorrespondingProduct(item, products);
+            correspondedProduct.ifPresent(product -> {
+                if (product.getAmountInStock() < item.getQuantity())
+                    throw new NotEnoughStockException("Not enough stock");
+                product.setAmountInStock(product.getAmountInStock() - item.getQuantity());
+            });
 
-            if (product.getAmountInStock() < itemQuantity)
-                throw new NotEnoughStockException("Not enough stock");
-            product.setAmountInStock(product.getAmountInStock() - itemQuantity);
 
         }
         productRepoPort.saveAll(products);
     }
 
+
     public void rollbackStock(List<OrderItem> items) {
-        List<Product> products = productRepoPort.getAllByIds(items.stream().map(OrderItem::getProductId).toList());
-        for (Product product : products) {
-            int itemQuantity = getItemQuantity(items, product);
-            product.setAmountInStock(product.getAmountInStock() + itemQuantity);
+        List<Product> products = getCorrespondingProducts(items);
+        for (OrderItem item : items) {
+            Optional<Product> correspondedProduct = getCorrespondingProduct(item, products);
+            correspondedProduct.ifPresent(product -> {
+             product.setAmountInStock(product.getAmountInStock() + item.getQuantity());
+            });
         }
         productRepoPort.saveAll(products);
     }
@@ -43,5 +49,12 @@ public class StockEventService {
         return items.stream().filter(item -> item.getProductId().equals(product.getId()))
                 .findFirst()
                 .map(OrderItem::getQuantity).orElse(0);
+    }
+    private List<Product> getCorrespondingProducts(List<OrderItem> items) {
+        return productRepoPort.getAllByIds(items.stream().map(OrderItem::getProductId)
+                .toList());
+    }
+    private  Optional<Product> getCorrespondingProduct(OrderItem item, List<Product> products) {
+        return products.stream().filter(p -> p.getId().equals(item.getProductId())).findFirst();
     }
 }
