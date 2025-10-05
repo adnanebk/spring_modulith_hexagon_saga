@@ -5,7 +5,7 @@ import com.example.demo.common.events.OrderPayedEvent;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.common.models.OrderShipping;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,15 +13,20 @@ public class ShippingListener {
 
     private ApplicationEventPublisher publisher;
 
-    public ShippingListener(ApplicationEventPublisher publisher) {
+    private NotificationService notificationService;
+
+
+    public ShippingListener(ApplicationEventPublisher publisher, NotificationService notificationService) {
         this.publisher = publisher;
+        this.notificationService = notificationService;
     }
 
-    @EventListener
+    @ApplicationModuleListener
     public void handle(OrderPayedEvent event){
         OrderShipping orderShipping = event.getOrder().getShipping();
-        // save customer shipping info
-           orderShipping.setId(1);
-        publisher.publishEvent(new OrderShippedEvent(event.getOrder()));
+            // save customer shipping info
+            orderShipping.setId(1);
+            notificationService.sendMessage(event.getOrder().getId(),"adnan", "Order Shipped", "Order Shipped");
+            publisher.publishEvent(new OrderShippedEvent(event.getOrder()));
     }
 }

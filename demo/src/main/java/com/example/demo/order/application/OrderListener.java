@@ -3,8 +3,8 @@ package com.example.demo.order.application;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.common.models.OrderInput;
-import com.example.demo.order.domain.ports.out.OrderRepoPort;
 import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.order.domain.ports.out.OrderRepoPort;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 

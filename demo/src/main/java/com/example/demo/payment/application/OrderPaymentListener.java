@@ -7,7 +7,7 @@ import com.example.demo.common.events.OrderPayedEvent;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.models.OrderPayment;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,12 +19,12 @@ private ApplicationEventPublisher publisher;
         this.publisher = publisher;
     }
 
-    @EventListener
+    @ApplicationModuleListener
     public void handle(OrderProductStockVerifiedEvent event){
         OrderPayment paymentInfo = event.getOrder().getPaymentInfo();
             if(paymentInfo.getType().equals(PaymentType.PAYPAL)) {
                 publisher.publishEvent(new OrderCanceledEvent(event.getOrder(), OrderCancellingCause.PAYMENT_FAILED));
-                return;
+               return;
             }
             paymentInfo.setId(1);
             publisher.publishEvent(new OrderPayedEvent(event.getOrder()));

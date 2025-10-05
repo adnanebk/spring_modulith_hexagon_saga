@@ -27,8 +27,6 @@ public class StockEventService {
                     throw new NotEnoughStockException("Not enough stock");
                 product.setAmountInStock(product.getAmountInStock() - item.getQuantity());
             });
-
-
         }
         productRepoPort.saveAll(products);
     }

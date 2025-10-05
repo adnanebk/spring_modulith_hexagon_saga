@@ -1,15 +1,16 @@
 package com.example.demo.order;
 
-import com.example.demo.order.domain.models.OrderStatus;
 import com.example.demo.common.enums.PaymentType;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
-import com.example.demo.order.application.OrderService;
-import com.example.demo.common.models.OrderShipping;
 import com.example.demo.common.models.OrderInput;
 import com.example.demo.common.models.OrderItem;
 import com.example.demo.common.models.OrderPayment;
+import com.example.demo.common.models.OrderShipping;
+import com.example.demo.order.application.OrderService;
+import com.example.demo.order.domain.models.OrderStatus;
 import com.example.demo.order.domain.ports.out.OrderRepoPort;
+import com.example.demo.shipping.infra.EmailServiceImp;
 import com.example.demo.stock.infra.entities.ProductEntity;
 import com.example.demo.stock.infra.repo.ProductSpringRepo;
 import org.junit.jupiter.api.Assertions;
@@ -17,17 +18,15 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.modulith.events.IncompleteEventPublications;
 import org.springframework.modulith.test.EnableScenarios;
 import org.springframework.modulith.test.Scenario;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-
 
 
 @SpringBootTest
@@ -44,9 +43,9 @@ class OrderServiceTest {
 
     @MockitoSpyBean
     private  OrderRepoPort orderRepoPort;
+    @MockitoSpyBean
+    private EmailServiceImp emailServiceImp;
 
-    @Autowired
-    private IncompleteEventPublications incompleteEventPublications;
 
     @Test
     @Order(1)
@@ -54,12 +53,13 @@ class OrderServiceTest {
         var products = createProducts();
         productSpringRepo.saveAll(products);
         OrderInput order = createOrder();
+        doThrow(RuntimeException.class).when(emailServiceImp).sendMessage(any(),any(),any());
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderShippedEvent.class)
                 .toArriveAndVerify((e->{
                     verify(orderRepoPort).update(1,OrderStatus.COMPLETED,1,1);
                     var savedProducts = productSpringRepo.findAll();
-                    Assertions.assertTrue(savedProducts.size()==2);
+                    Assertions.assertEquals(2, savedProducts.size());
                     Assertions.assertEquals(8,savedProducts.get(0).getAmountInStock());
                 }));
     }
