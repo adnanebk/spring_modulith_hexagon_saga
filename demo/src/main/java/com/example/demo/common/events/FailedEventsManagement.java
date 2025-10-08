@@ -4,6 +4,8 @@ import org.springframework.modulith.events.IncompleteEventPublications;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +17,7 @@ public class FailedEventsManagement {
     private final IncompleteEventPublications incompleteEventPublications;
     private final Map<UUID,Integer> attempts = new ConcurrentHashMap<>();
     private final int maxAttempts = 3;
+    private final long maxDurationInSeconds = 20;
 
     public FailedEventsManagement(IncompleteEventPublications incompleteEventPublications) {
         this.incompleteEventPublications = incompleteEventPublications;
@@ -26,7 +29,9 @@ public class FailedEventsManagement {
         incompleteEventPublications.resubmitIncompletePublications(filter->{
            UUID id =  filter.getIdentifier();
           attempts.put(id,attempts.getOrDefault(id,0)+1);
-          return attempts.get(id)<=maxAttempts;
+            Instant publicationDate = filter.getPublicationDate();
+            long durationInSeconds = publicationDate.until(Instant.now(), ChronoUnit.SECONDS);
+            return attempts.get(id)<=maxAttempts && durationInSeconds<=maxDurationInSeconds;
         });
     }
 }

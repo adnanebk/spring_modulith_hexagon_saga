@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,10 +19,7 @@ public class NotificationService {
 
     public NotificationService(List<NotificationServicePort> notificationServices) {
         this.services = notificationServices.stream()
-                .collect(Collectors.toMap(
-                        NotificationServicePort::getType,
-                        service -> service
-                ));
+                .collect(Collectors.toMap(NotificationServicePort::getType, Function.identity()));
     }
 
     public void sendMessage(Integer id, String to, String subject, String body) {
@@ -35,7 +33,9 @@ public class NotificationService {
     }
 
     private NotificationType switchNotificationType(Integer id) {
-        return NotificationType.values()[getNotificationType(id).ordinal() + 1 % NotificationType.values().length];
+        int ordinal = getNotificationType(id).ordinal();
+        var notificationTypes = NotificationType.values();
+        return NotificationType.values()[(ordinal + 1) % notificationTypes.length];
     }
 
     private NotificationType getNotificationType(Integer id) {
