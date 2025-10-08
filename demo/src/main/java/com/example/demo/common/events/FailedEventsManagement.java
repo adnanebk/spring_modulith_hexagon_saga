@@ -4,19 +4,29 @@ import org.springframework.modulith.events.IncompleteEventPublications;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 @Component
 public class FailedEventsManagement {
 
     private final IncompleteEventPublications incompleteEventPublications;
+    private final Map<UUID,Integer> attempts = new ConcurrentHashMap<>();
+    private final int maxAttempts = 3;
 
     public FailedEventsManagement(IncompleteEventPublications incompleteEventPublications) {
         this.incompleteEventPublications = incompleteEventPublications;
     }
 
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 5000)
     public void retry() {
-        incompleteEventPublications.resubmitIncompletePublications(filter->true);
+        incompleteEventPublications.resubmitIncompletePublications(filter->{
+           UUID id =  filter.getIdentifier();
+          attempts.put(id,attempts.getOrDefault(id,0)+1);
+          return attempts.get(id)<=maxAttempts;
+        });
     }
 }
