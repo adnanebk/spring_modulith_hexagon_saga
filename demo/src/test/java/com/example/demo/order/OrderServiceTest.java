@@ -9,7 +9,7 @@ import com.example.demo.common.models.OrderPayment;
 import com.example.demo.common.models.OrderShipping;
 import com.example.demo.order.application.OrderService;
 import com.example.demo.order.domain.models.OrderStatus;
-import com.example.demo.order.domain.ports.out.OrderRepoPort;
+import com.example.demo.order.ports.out.OrderRepoPort;
 import com.example.demo.shipping.infra.EmailServiceImp;
 import com.example.demo.stock.infra.entities.ProductEntity;
 import com.example.demo.stock.infra.repo.ProductSpringRepo;

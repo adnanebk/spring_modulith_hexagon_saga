@@ -1,4 +1,4 @@
 @org.springframework.modulith.ApplicationModule(displayName = "shipping.application",
-        allowedDependencies = {"common","shipping.domain"}
+        allowedDependencies = {"common","shipping.domain","shipping.ports"}
 )
 package com.example.demo.shipping.application;

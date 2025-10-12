@@ -3,6 +3,7 @@ package com.example.demo;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.modulith.core.ApplicationModules;
+import org.springframework.modulith.docs.Documenter;
 
 @SpringBootTest
 class DemoApplicationTests {
@@ -12,7 +13,10 @@ class DemoApplicationTests {
     @Test
     void createModuleDocumentation() {
 
-        var m = modules.verify();
+        var r = modules.verify();
+        new Documenter(ApplicationModules.of("com.example.demo.order")).writeDocumentation();
+
+
 
     }
 

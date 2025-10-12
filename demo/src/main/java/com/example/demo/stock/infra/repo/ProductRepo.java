@@ -1,7 +1,7 @@
 package com.example.demo.stock.infra.repo;
 
 import com.example.demo.stock.domain.models.Product;
-import com.example.demo.stock.domain.ports.in.ProductRepoPort;
+import com.example.demo.stock.ports.in.ProductRepoPort;
 import com.example.demo.stock.infra.mappers.ProductMapper;
 import org.springframework.stereotype.Repository;
 

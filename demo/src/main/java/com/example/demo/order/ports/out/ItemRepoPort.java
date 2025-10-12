@@ -1,4 +1,4 @@
-package com.example.demo.order.domain.ports.out;
+package com.example.demo.order.ports.out;
 
 import com.example.demo.common.models.OrderItem;
 

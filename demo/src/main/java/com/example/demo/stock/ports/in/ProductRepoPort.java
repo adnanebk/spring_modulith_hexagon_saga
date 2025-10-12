@@ -1,4 +1,4 @@
-package com.example.demo.stock.domain.ports.in;
+package com.example.demo.stock.ports.in;
 
 import com.example.demo.stock.domain.models.Product;
 

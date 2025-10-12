@@ -1,4 +1,4 @@
-package com.example.demo.shipping.domain.ports.out;
+package com.example.demo.shipping.ports.out;
 
 import com.example.demo.common.enums.NotificationType;
 

@@ -3,7 +3,7 @@ package com.example.demo.order.infra.repo.order;
 import com.example.demo.common.models.OrderInput;
 import com.example.demo.order.domain.models.OrderOutput;
 import com.example.demo.order.domain.models.OrderStatus;
-import com.example.demo.order.domain.ports.out.OrderRepoPort;
+import com.example.demo.order.ports.out.OrderRepoPort;
 import com.example.demo.order.infra.entities.OrderEntity;
 import com.example.demo.order.infra.mappers.OrderMapper;
 import com.example.demo.order.infra.repo.item.ItemSpringRepo;

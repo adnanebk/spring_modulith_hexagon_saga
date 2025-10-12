@@ -4,7 +4,7 @@ package com.example.demo.stock.application;
 import com.example.demo.common.models.OrderItem;
 import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import com.example.demo.stock.domain.models.Product;
-import com.example.demo.stock.domain.ports.in.ProductRepoPort;
+import com.example.demo.stock.ports.in.ProductRepoPort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
