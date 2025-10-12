@@ -23,7 +23,7 @@ public class StockListener {
     @ApplicationModuleListener
     public void handle(OrderPlacedEvent event){
         try {
-            stockEventService.updateStock(event.getOrder().getItems());
+            stockEventService.updateProductQuantity(event.getOrder().getItems());
             publisher.publishEvent(new OrderProductStockVerifiedEvent(event.getOrder()));
         } catch (NotEnoughStockException e) {
             publisher.publishEvent(new OrderCanceledEvent(event.getOrder(), OrderCancellingCause.NOT_ENOUGH_STOCK));
@@ -32,7 +32,7 @@ public class StockListener {
     @ApplicationModuleListener
     public void handle(OrderCanceledEvent event){
            if(event.getOrderCancellingCause().equals(OrderCancellingCause.PAYMENT_FAILED))
-            stockEventService.rollbackStock(event.getOrder().getItems());
+            stockEventService.rollbackProductQuantity(event.getOrder().getItems());
     }
 
 }

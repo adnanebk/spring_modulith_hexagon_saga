@@ -13,8 +13,8 @@ class DemoApplicationTests {
     @Test
     void createModuleDocumentation() {
 
-        var r = modules.verify();
-        new Documenter(ApplicationModules.of("com.example.demo.order")).writeDocumentation();
+       var m = modules.verify();
+        new Documenter(m).writeDocumentation();
 
 
 

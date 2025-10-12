@@ -2,8 +2,8 @@ package com.example.demo.order.application;
 
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
-import com.example.demo.common.models.OrderInput;
-import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.common.models.Order;
+import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderCanceledEvent event){
-        OrderInput order = event.getOrder();
+        Order order = event.getOrder();
         orderRepoPort.update(order.getId(), OrderStatus.CANCELLED, order.getPaymentInfo().getId(), order.getShipping().getId());
 
 
@@ -27,7 +27,7 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderShippedEvent event){
-        OrderInput order = event.getOrder();
+        Order order = event.getOrder();
         orderRepoPort.update(order.getId(), OrderStatus.COMPLETED,order.getPaymentInfo().getId(), order.getShipping().getId());
     }
 }

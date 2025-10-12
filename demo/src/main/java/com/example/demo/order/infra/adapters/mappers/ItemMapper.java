@@ -1,7 +1,8 @@
-package com.example.demo.order.infra.mappers;
+package com.example.demo.order.infra.adapters.mappers;
 
 
 import com.example.demo.common.models.OrderItem;
+import com.example.demo.order.infra.dto.OrderItemInputDto;
 import com.example.demo.order.infra.entities.ItemEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -20,4 +21,9 @@ public class ItemMapper {
        return item;
    }
 
+    public OrderItem toDomain(OrderItemInputDto orderItemInputDto) {
+        OrderItem orderItem = new OrderItem();
+        BeanUtils.copyProperties(orderItemInputDto, orderItem);
+        return orderItem;
+    }
 }

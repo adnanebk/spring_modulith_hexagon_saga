@@ -3,18 +3,17 @@ package com.example.demo.order;
 import com.example.demo.common.enums.PaymentType;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
-import com.example.demo.common.models.OrderInput;
+import com.example.demo.common.models.Order;
 import com.example.demo.common.models.OrderItem;
 import com.example.demo.common.models.OrderPayment;
 import com.example.demo.common.models.OrderShipping;
 import com.example.demo.order.application.OrderService;
-import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import com.example.demo.shipping.infra.EmailServiceImp;
 import com.example.demo.stock.infra.entities.ProductEntity;
 import com.example.demo.stock.infra.repo.ProductSpringRepo;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,11 +47,11 @@ class OrderServiceTest {
 
 
     @Test
-    @Order(1)
+    @org.junit.jupiter.api.Order(1)
     public void testPlaceOrderSuccess(Scenario scenario)  {
         var products = createProducts();
         productSpringRepo.saveAll(products);
-        OrderInput order = createOrder();
+        Order order = createOrder();
         doThrow(RuntimeException.class).when(emailServiceImp).sendMessage(any(),any(),any());
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderShippedEvent.class)
@@ -64,11 +63,11 @@ class OrderServiceTest {
                 }));
     }
     @Test
-    @Order(2)
+    @org.junit.jupiter.api.Order(2)
     public void testPlaceOrderPaymentFailed(Scenario scenario)  {
         var products = createProducts();
         productSpringRepo.saveAll(products);
-        OrderInput order = createOrder();
+        Order order = createOrder();
         order.getPaymentInfo().setType(PaymentType.PAYPAL);
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderCanceledEvent.class)
@@ -80,12 +79,12 @@ class OrderServiceTest {
                 }));
     }
     @Test
-    @Order(3)
+    @org.junit.jupiter.api.Order(3)
     public void testItemStockFailed(Scenario scenario)  {
         var products = createProducts();
         products.get(0).setAmountInStock(1);
         productSpringRepo.saveAll(products);
-        OrderInput order = createOrder();
+        Order order = createOrder();
         order.getPaymentInfo().setType(PaymentType.CASH);
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderCanceledEvent.class)
@@ -96,10 +95,10 @@ class OrderServiceTest {
                     Assertions.assertEquals(1,savedProducts.get(0).getAmountInStock());
                 }));
     }
-    private  OrderInput createOrder() {
+    private Order createOrder() {
         OrderItem i1 = new OrderItem("",10.0,2,1);
         OrderItem i2 = new OrderItem("",10.0,2,2);
-        OrderInput order = new OrderInput();
+        Order order = new Order();
         order.setItems(List.of(i1,i2));
         order.setTotal(10.0);
         order.setShipping(new OrderShipping());

@@ -1,14 +1,14 @@
 package com.example.demo.common.events;
 
-import com.example.demo.common.models.OrderInput;
+import com.example.demo.common.models.Order;
 
 public class OrderPlacedEvent {
-    private OrderInput order;
+    private Order order;
 
-    public OrderPlacedEvent(OrderInput order) {
+    public OrderPlacedEvent(Order order) {
         this.order = order;
     }
-    public OrderInput getOrder() {
+    public Order getOrder() {
         return order;
     }
 

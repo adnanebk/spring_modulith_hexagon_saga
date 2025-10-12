@@ -18,7 +18,7 @@ public class StockEventService {
         this.productRepoPort = productRepoPort;
     }
 
-    public void updateStock(List<OrderItem> items) {
+    public void updateProductQuantity(List<OrderItem> items) {
         List<Product> products = getCorrespondingProducts(items);
         for (OrderItem item : items) {
             Optional<Product> correspondedProduct = getCorrespondingProduct(item, products);
@@ -32,7 +32,7 @@ public class StockEventService {
     }
 
 
-    public void rollbackStock(List<OrderItem> items) {
+    public void rollbackProductQuantity(List<OrderItem> items) {
         List<Product> products = getCorrespondingProducts(items);
         for (OrderItem item : items) {
             Optional<Product> correspondedProduct = getCorrespondingProduct(item, products);

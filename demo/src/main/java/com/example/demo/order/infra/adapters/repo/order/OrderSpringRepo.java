@@ -1,6 +1,6 @@
-package com.example.demo.order.infra.repo.order;
+package com.example.demo.order.infra.adapters.repo.order;
 
-import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.order.infra.entities.OrderEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

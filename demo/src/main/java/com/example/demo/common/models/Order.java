@@ -1,16 +1,45 @@
 package com.example.demo.common.models;
 
 
+import com.example.demo.common.enums.OrderStatus;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class OrderInput {
+public class Order {
 
     private Integer  id;
     private List<OrderItem> items;
     private Double total;
     private OrderShipping shipping;
     private OrderPayment paymentInfo;
+    private OrderStatus status;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public Integer getId() {
         return id;

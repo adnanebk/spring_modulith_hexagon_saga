@@ -1,11 +1,10 @@
 package com.example.demo.order.ports.out;
 
-import com.example.demo.common.models.OrderInput;
-import com.example.demo.order.domain.models.OrderOutput;
-import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.order.domain.models.OrderInput;
+import com.example.demo.common.enums.OrderStatus;
 
 public interface OrderRepoPort {
-    OrderOutput save(OrderInput order);
+    Integer create(OrderInput order);
 
     void update(Integer id, OrderStatus status, Integer paymentId, Integer shippingId);
 }
