@@ -1,7 +1,7 @@
 package com.example.demo.order.infra.adapters.repo.order;
 
-import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.order.domain.models.OrderInput;
+import com.example.demo.order.domain.models.OrderStatus;
 import com.example.demo.order.infra.adapters.mappers.OrderMapper;
 import com.example.demo.order.infra.entities.OrderEntity;
 import com.example.demo.order.ports.out.OrderRepoPort;

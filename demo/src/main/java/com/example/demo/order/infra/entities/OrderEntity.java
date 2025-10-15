@@ -1,6 +1,6 @@
 package com.example.demo.order.infra.entities;
 
-import com.example.demo.common.enums.OrderStatus;
+import com.example.demo.order.domain.models.OrderStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

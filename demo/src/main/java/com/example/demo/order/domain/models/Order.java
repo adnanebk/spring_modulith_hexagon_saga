@@ -1,8 +1,5 @@
 package com.example.demo.order.domain.models;
 
-
-import com.example.demo.common.enums.OrderStatus;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

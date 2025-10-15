@@ -1,5 +1,5 @@
 @ApplicationModule(displayName = "shipping.domain",
-        type = ApplicationModule.Type.OPEN,allowedDependencies = "common"
+        type = ApplicationModule.Type.OPEN,allowedDependencies = "shipping"
 )
 package com.example.demo.shipping.domain;
 

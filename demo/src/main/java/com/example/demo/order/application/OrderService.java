@@ -1,11 +1,11 @@
 package com.example.demo.order.application;
 
 
-import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.common.events.data.OrderData;
 import com.example.demo.order.domain.models.Order;
 import com.example.demo.order.domain.models.OrderInput;
+import com.example.demo.order.domain.models.OrderStatus;
 import com.example.demo.order.ports.in.OrderServicePort;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.context.ApplicationEventPublisher;

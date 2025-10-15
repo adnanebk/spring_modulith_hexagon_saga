@@ -1,7 +1,7 @@
 package com.example.demo.order.ports.out;
 
-import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.order.domain.models.OrderInput;
+import com.example.demo.order.domain.models.OrderStatus;
 
 import java.util.UUID;
 

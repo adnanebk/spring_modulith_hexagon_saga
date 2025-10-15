@@ -1,6 +1,5 @@
 package com.example.demo.payment.domain.models;
 
-import com.example.demo.common.enums.PaymentType;
 
 public class Payment {
     private Integer id;

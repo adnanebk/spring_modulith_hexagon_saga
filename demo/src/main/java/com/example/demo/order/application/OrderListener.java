@@ -1,10 +1,10 @@
 package com.example.demo.order.application;
 
 import com.example.demo.common.enums.GeneratedId;
-import com.example.demo.common.enums.OrderStatus;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.common.events.data.OrderData;
+import com.example.demo.order.domain.models.OrderStatus;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
