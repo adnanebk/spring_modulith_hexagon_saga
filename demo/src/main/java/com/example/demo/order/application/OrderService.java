@@ -1,15 +1,17 @@
 package com.example.demo.order.application;
 
 
-import com.example.demo.common.events.OrderPlacedEvent;
-import com.example.demo.common.models.Order;
-import com.example.demo.order.domain.models.OrderInput;
 import com.example.demo.common.enums.OrderStatus;
+import com.example.demo.common.events.OrderPlacedEvent;
+import com.example.demo.common.events.data.OrderData;
+import com.example.demo.order.domain.models.Order;
+import com.example.demo.order.domain.models.OrderInput;
 import com.example.demo.order.ports.in.OrderServicePort;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class OrderService implements OrderServicePort {
@@ -27,8 +29,10 @@ public class OrderService implements OrderServicePort {
     public Integer placeOrder(Order order) {
         order.setStatus(OrderStatus.PENDING);
         Integer orderId = orderRepoPort.create(new OrderInput(order.getStatus(), order.getTotal(), order.getItems()));
-        order.setId(orderId);
-        publisher.publishEvent(new OrderPlacedEvent(order));
+        OrderData orderData = OrderDataMapper.mapToOrderData(orderId,order);
+        publisher.publishEvent(new OrderPlacedEvent(orderData));
         return orderId;
     }
+
+
 }

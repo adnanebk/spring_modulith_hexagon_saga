@@ -1,4 +1,4 @@
-package com.example.demo.common.models;
+package com.example.demo.order.domain.models;
 
 
 import com.example.demo.common.enums.OrderStatus;
@@ -8,14 +8,14 @@ import java.util.List;
 
 public class Order {
 
-    private Integer  id;
     private List<OrderItem> items;
     private Double total;
     private OrderShipping shipping;
     private OrderPayment paymentInfo;
     private OrderStatus status;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 
     public OrderStatus getStatus() {
         return status;
@@ -40,15 +40,6 @@ public class Order {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
 
     public Double getTotal() {
         return total;

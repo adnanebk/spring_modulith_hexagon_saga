@@ -1,11 +1,14 @@
 package com.example.demo.order.infra.adapters.repo.order;
 
-import com.example.demo.order.domain.models.OrderInput;
 import com.example.demo.common.enums.OrderStatus;
-import com.example.demo.order.ports.out.OrderRepoPort;
-import com.example.demo.order.infra.entities.OrderEntity;
+import com.example.demo.order.domain.models.OrderInput;
 import com.example.demo.order.infra.adapters.mappers.OrderMapper;
+import com.example.demo.order.infra.entities.OrderEntity;
+import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
 
 @Repository
 public class OrderRepo implements OrderRepoPort {
@@ -26,8 +29,13 @@ public class OrderRepo implements OrderRepoPort {
     }
 
     @Override
-    public void update(Integer id, OrderStatus status, Integer paymentId, Integer shippingId) {
-        orderSpringRepo.updateStatus(id, status,paymentId,shippingId);
+    public void updateStatus(Integer id, OrderStatus status) {
+        orderSpringRepo.updateStatus(id, status);
+    }
+
+    @Override
+    public void update(Integer id, OrderStatus orderStatus, UUID locationId, UUID transactionId) {
+        orderSpringRepo.update(id, orderStatus,locationId,transactionId);
     }
 
 

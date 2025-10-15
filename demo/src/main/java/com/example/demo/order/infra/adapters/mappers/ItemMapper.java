@@ -1,7 +1,7 @@
 package com.example.demo.order.infra.adapters.mappers;
 
 
-import com.example.demo.common.models.OrderItem;
+import com.example.demo.order.domain.models.OrderItem;
 import com.example.demo.order.infra.dto.OrderItemInputDto;
 import com.example.demo.order.infra.entities.ItemEntity;
 import org.springframework.beans.BeanUtils;

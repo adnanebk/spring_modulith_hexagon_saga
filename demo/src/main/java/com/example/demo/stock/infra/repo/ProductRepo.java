@@ -1,8 +1,8 @@
 package com.example.demo.stock.infra.repo;
 
 import com.example.demo.stock.domain.models.Product;
-import com.example.demo.stock.ports.in.ProductRepoPort;
 import com.example.demo.stock.infra.mappers.ProductMapper;
+import com.example.demo.stock.ports.in.ProductRepoPort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

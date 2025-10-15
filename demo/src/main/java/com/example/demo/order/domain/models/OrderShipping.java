@@ -1,7 +1,6 @@
-package com.example.demo.common.models;
+package com.example.demo.order.domain.models;
 
 public class OrderShipping {
-    private Integer id;
     private String name;
     private String email;
     private String address;
@@ -15,14 +14,6 @@ public class OrderShipping {
         this.email = email;
         this.address = address;
         this.phone = phone;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

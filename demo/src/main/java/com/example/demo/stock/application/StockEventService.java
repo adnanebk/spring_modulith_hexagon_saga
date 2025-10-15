@@ -1,7 +1,7 @@
 package com.example.demo.stock.application;
 
 
-import com.example.demo.common.models.OrderItem;
+import com.example.demo.common.events.data.OrderItemData;
 import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import com.example.demo.stock.domain.models.Product;
 import com.example.demo.stock.ports.in.ProductRepoPort;
@@ -18,41 +18,36 @@ public class StockEventService {
         this.productRepoPort = productRepoPort;
     }
 
-    public void updateProductQuantity(List<OrderItem> items) {
+    public void updateProductQuantity(List<OrderItemData> items) {
         List<Product> products = getCorrespondingProducts(items);
-        for (OrderItem item : items) {
+        for (OrderItemData item : items) {
             Optional<Product> correspondedProduct = getCorrespondingProduct(item, products);
             correspondedProduct.ifPresent(product -> {
-                if (product.getAmountInStock() < item.getQuantity())
+                if (product.getAmountInStock() < item.quantity())
                     throw new NotEnoughStockException("Not enough stock");
-                product.setAmountInStock(product.getAmountInStock() - item.getQuantity());
+                product.setAmountInStock(product.getAmountInStock() - item.quantity());
             });
         }
         productRepoPort.saveAll(products);
     }
 
 
-    public void rollbackProductQuantity(List<OrderItem> items) {
+    public void rollbackProductQuantity(List<OrderItemData> items) {
         List<Product> products = getCorrespondingProducts(items);
-        for (OrderItem item : items) {
+        for (OrderItemData item : items) {
             Optional<Product> correspondedProduct = getCorrespondingProduct(item, products);
             correspondedProduct.ifPresent(product -> {
-             product.setAmountInStock(product.getAmountInStock() + item.getQuantity());
+             product.setAmountInStock(product.getAmountInStock() + item.quantity());
             });
         }
         productRepoPort.saveAll(products);
     }
 
-    private  Integer getItemQuantity(List<OrderItem> items, Product product) {
-        return items.stream().filter(item -> item.getProductId().equals(product.getId()))
-                .findFirst()
-                .map(OrderItem::getQuantity).orElse(0);
-    }
-    private List<Product> getCorrespondingProducts(List<OrderItem> items) {
-        return productRepoPort.getAllByIds(items.stream().map(OrderItem::getProductId)
+    private List<Product> getCorrespondingProducts(List<OrderItemData> items) {
+        return productRepoPort.getAllByIds(items.stream().map(OrderItemData::productId)
                 .toList());
     }
-    private  Optional<Product> getCorrespondingProduct(OrderItem item, List<Product> products) {
-        return products.stream().filter(p -> p.getId().equals(item.getProductId())).findFirst();
+    private  Optional<Product> getCorrespondingProduct(OrderItemData item, List<Product> products) {
+        return products.stream().filter(p -> p.getId().equals(item.productId())).findFirst();
     }
 }

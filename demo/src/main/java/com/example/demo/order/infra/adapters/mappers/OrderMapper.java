@@ -1,10 +1,11 @@
 package com.example.demo.order.infra.adapters.mappers;
 
 
-import com.example.demo.common.models.Order;
-import com.example.demo.common.models.OrderPayment;
-import com.example.demo.common.models.OrderShipping;
+
+import com.example.demo.order.domain.models.Order;
 import com.example.demo.order.domain.models.OrderInput;
+import com.example.demo.order.domain.models.OrderPayment;
+import com.example.demo.order.domain.models.OrderShipping;
 import com.example.demo.order.infra.dto.OrderInputDto;
 import com.example.demo.order.infra.entities.OrderEntity;
 import org.springframework.beans.BeanUtils;

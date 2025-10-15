@@ -1,12 +1,15 @@
 package com.example.demo.shipping.application;
 
 
+import com.example.demo.common.enums.GeneratedId;
 import com.example.demo.common.events.OrderPayedEvent;
 import com.example.demo.common.events.OrderShippedEvent;
-import com.example.demo.common.models.OrderShipping;
+import com.example.demo.common.events.data.OrderShippingData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class ShippingListener {
@@ -23,10 +26,10 @@ public class ShippingListener {
 
     @ApplicationModuleListener
     public void handle(OrderPayedEvent event){
-        OrderShipping orderShipping = event.getOrder().getShipping();
+        OrderShippingData orderShipping = event.getData().shipping();
             // save customer shipping info
-            orderShipping.setId(1);
-            notificationService.sendMessage(event.getOrder().getId(),"adnan", "Order Shipped", "Order Shipped");
-            publisher.publishEvent(new OrderShippedEvent(event.getOrder()));
+            event.getData().generatedIds().put(GeneratedId.LOCATION_ID, UUID.randomUUID());
+            notificationService.sendMessage(event.getData().id(),"adnan", "Order Shipped", "Order Shipped");
+            publisher.publishEvent(new OrderShippedEvent(event.getData()));
     }
 }

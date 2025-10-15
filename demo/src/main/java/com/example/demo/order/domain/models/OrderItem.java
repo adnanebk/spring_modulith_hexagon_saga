@@ -1,8 +1,7 @@
-package com.example.demo.common.models;
+package com.example.demo.order.domain.models;
 
 public class OrderItem {
 
-    private Integer id;
     private String name;
     private Double price;
     private Integer quantity;
@@ -17,14 +16,6 @@ public class OrderItem {
 
     public OrderItem() {
 
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

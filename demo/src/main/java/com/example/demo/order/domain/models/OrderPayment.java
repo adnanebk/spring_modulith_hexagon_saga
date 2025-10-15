@@ -1,9 +1,8 @@
-package com.example.demo.common.models;
+package com.example.demo.order.domain.models;
 
 import com.example.demo.common.enums.PaymentType;
 
 public class OrderPayment {
-    private Integer id;
     private PaymentType type;
 
     public OrderPayment( PaymentType type) {
@@ -11,14 +10,6 @@ public class OrderPayment {
     }
 
     public OrderPayment() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public PaymentType getType() {
