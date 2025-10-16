@@ -14,7 +14,9 @@ class DemoApplicationTests {
     void createModuleDocumentation() {
 
        var m = modules.verify();
-       // new Documenter(m).writeDocumentation();
+       new Documenter(m).writeDocumentation();
+      // new Documenter(ApplicationModules.of("com.example.demo.order")).writeDocumentation();
+
 
 
 

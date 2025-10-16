@@ -1,4 +1,4 @@
-package com.example.demo.common.enums;
+package com.example.demo.shipping.domain;
 
 public enum NotificationType {
     EMAIL,

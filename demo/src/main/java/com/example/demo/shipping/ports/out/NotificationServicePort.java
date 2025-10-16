@@ -1,6 +1,6 @@
 package com.example.demo.shipping.ports.out;
 
-import com.example.demo.common.enums.NotificationType;
+import com.example.demo.shipping.domain.NotificationType;
 
 public interface NotificationServicePort {
 

@@ -1,6 +1,6 @@
 package com.example.demo.shipping.application;
 
-import com.example.demo.common.enums.NotificationType;
+import com.example.demo.shipping.domain.NotificationType;
 import com.example.demo.shipping.ports.out.NotificationServicePort;
 import org.springframework.stereotype.Component;
 
