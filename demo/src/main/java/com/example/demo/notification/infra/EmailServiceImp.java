@@ -1,7 +1,7 @@
-package com.example.demo.shipping.infra;
+package com.example.demo.notification.infra;
 
-import com.example.demo.shipping.domain.NotificationType;
-import com.example.demo.shipping.ports.out.NotificationServicePort;
+import com.example.demo.notification.domain.NotificationType;
+import com.example.demo.notification.ports.out.NotificationServicePort;
 import org.springframework.stereotype.Service;
 
 @Service

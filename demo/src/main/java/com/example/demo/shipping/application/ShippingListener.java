@@ -2,6 +2,7 @@ package com.example.demo.shipping.application;
 
 
 import com.example.demo.common.enums.GeneratedId;
+import com.example.demo.common.events.NotificationEvent;
 import com.example.demo.common.events.OrderPayedEvent;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.common.events.data.OrderShippingData;
@@ -16,20 +17,19 @@ public class ShippingListener {
 
     private ApplicationEventPublisher publisher;
 
-    private NotificationService notificationService;
 
 
-    public ShippingListener(ApplicationEventPublisher publisher, NotificationService notificationService) {
+    public ShippingListener(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
-        this.notificationService = notificationService;
     }
 
     @ApplicationModuleListener
     public void handle(OrderPayedEvent event){
         OrderShippingData orderShipping = event.getData().shipping();
             // save customer shipping info
-            event.getData().generatedIds().put(GeneratedId.LOCATION_ID, UUID.randomUUID());
-            notificationService.sendMessage(event.getData().id(),"adnan", "Order Shipped", "Order Shipped");
+        UUID shippingId = UUID.randomUUID();
+        event.getData().generatedIds().put(GeneratedId.LOCATION_ID, shippingId);
+            publisher.publishEvent(new NotificationEvent(UUID.randomUUID(),"adnan", "Order Shipped", "Order Shipped"));
             publisher.publishEvent(new OrderShippedEvent(event.getData()));
     }
 }

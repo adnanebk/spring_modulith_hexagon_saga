@@ -1,6 +1,6 @@
-package com.example.demo.shipping.ports.out;
+package com.example.demo.notification.ports.out;
 
-import com.example.demo.shipping.domain.NotificationType;
+import com.example.demo.notification.domain.NotificationType;
 
 public interface NotificationServicePort {
 
