@@ -44,8 +44,17 @@ class OrderServiceTest {
     @MockitoSpyBean
     private NotificationListener notificationListener;
 
+
+    @BeforeEach
+     void setup() {
+        productSpringRepo.deleteAll();
+        ProductEntity product1 = new ProductEntity("p1",10);
+        ProductEntity product2= new ProductEntity("p2",10);
+         productSpringRepo.saveAll(List.of(product1,product2));
+    }
+
     @Test
-    public void testPlaceOrderSuccess(Scenario scenario)  {
+    public void testPlaceOrderSuccess(Scenario scenario) {
         Order order = createOrder();
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderShippedEvent.class)
@@ -61,9 +70,8 @@ class OrderServiceTest {
 
     @Test
     public void testPlaceOrderPaymentFailed(Scenario scenario)  {
-        var products = createProducts();
         Order order = createOrder();
-        order.getPaymentInfo().setType(PaymentType.PAYPAL);
+        order.setPaymentInfo(new OrderPayment(PaymentType.PAYPAL));
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderCanceledEvent.class)
                 .toArriveAndVerify((e->{
@@ -71,13 +79,13 @@ class OrderServiceTest {
                     var savedProducts = productSpringRepo.findAll();
                     Assertions.assertTrue(savedProducts.size()==2);
                     Assertions.assertEquals(10,savedProducts.get(0).getAmountInStock());
-
                 }));
     }
 
     private Order createOrder() {
-        OrderItem i1 = new OrderItem("",10.0,2,1);
-        OrderItem i2 = new OrderItem("",10.0,2,2);
+        List<ProductEntity> products = productSpringRepo.findAll();
+        OrderItem i1 = new OrderItem("",10.0,2,products.get(0).getId());
+        OrderItem i2 = new OrderItem("",10.0,2,products.get(1).getId());
         Order order = new Order();
         order.setItems(List.of(i1,i2));
         order.setTotal(10.0);
@@ -85,18 +93,5 @@ class OrderServiceTest {
         order.setPaymentInfo(new OrderPayment(PaymentType.CASH));
         return order;
     }
-
-    private List<ProductEntity> createProducts() {
-        productSpringRepo.deleteAll();
-        ProductEntity product1 = new ProductEntity("p1",10);
-        ProductEntity product2= new ProductEntity("p2",10);
-        return productSpringRepo.saveAll(List.of(product1,product2));
-    }
-
-
-
-
-
-
 
 }
