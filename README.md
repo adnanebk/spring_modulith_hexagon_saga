@@ -1,4 +1,4 @@
-This is an example of an ecommerce modulith application using hexagonal architecture 
+This is an example of an ecommerce spring modulith application using hexagonal architecture 
 
 an example of order module diagram
 
