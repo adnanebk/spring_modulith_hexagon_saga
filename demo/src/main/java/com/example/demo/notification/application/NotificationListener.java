@@ -19,11 +19,11 @@ public class NotificationListener {
     @ApplicationModuleListener
     public void handleNotificationEvent(NotificationEvent event) {
         try{
-            NotificationType type = notificationServiceRegister.getNotificationType(event.getId());
+            NotificationType type = notificationServiceRegister.getNotificationType(event.id());
             notificationServiceRegister.getService(type)
-                    .sendMessage(event.getEmail() , event.getSubject(), event.getBody());
+                    .sendMessage(event.email() , event.subject(), event.body());
         } catch (RuntimeException ex){
-            notificationServiceRegister.switchNotificationType(event.getId());
+            notificationServiceRegister.switchNotificationType(event.id());
             throw ex;
         }
     }

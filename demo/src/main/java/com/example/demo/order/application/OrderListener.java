@@ -23,7 +23,7 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderCanceledEvent event){
-        OrderData order = event.getData();
+        OrderData order = event.data();
         orderRepoPort.updateStatus(order.id(), OrderStatus.CANCELLED);
 
     }
@@ -31,7 +31,7 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderShippedEvent event){
-        OrderData order = event.getData();
+        OrderData order = event.data();
         Map<GeneratedId, UUID> generatedIds = order.generatedIds();
         orderRepoPort.update(order.id(), OrderStatus.COMPLETED,generatedIds.get(GeneratedId.LOCATION_ID),generatedIds.get(GeneratedId.PAYMENT_ID));
     }

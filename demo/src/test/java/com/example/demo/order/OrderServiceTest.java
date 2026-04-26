@@ -59,7 +59,7 @@ class OrderServiceTest {
         scenario.stimulate(()->orderService.placeOrder(order))
                 .andWaitForEventOfType(OrderShippedEvent.class)
                 .toArriveAndVerify((e->{
-                    OrderData data = e.getData();
+                    OrderData data = e.data();
                     verify(orderRepoPort).update(data.id(),OrderStatus.COMPLETED,data.generatedIds().get(LOCATION_ID),data.generatedIds().get(PAYMENT_ID));
                     verify(notificationListener).handleNotificationEvent(any());
                     var savedProducts = productSpringRepo.findAll();

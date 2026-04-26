@@ -24,14 +24,14 @@ private ApplicationEventPublisher publisher;
 
     @ApplicationModuleListener
     public void handle(OrderProductStockVerifiedEvent event){
-        OrderPaymentData paymentInfo = event.getData().paymentInfo();
+        OrderPaymentData paymentInfo = event.data().paymentInfo();
             if(paymentInfo.type().equals(PaymentType.PAYPAL)) {
-                publisher.publishEvent(new OrderCanceledEvent(event.getData(), OrderCancellingCause.PAYMENT_FAILED));
+                publisher.publishEvent(new OrderCanceledEvent(event.data(), OrderCancellingCause.PAYMENT_FAILED));
                return;
             }
             // save payment to repo
-            event.getData().generatedIds().put(GeneratedId.PAYMENT_ID, UUID.randomUUID());
-            publisher.publishEvent(new OrderPayedEvent(event.getData()));
+            event.data().generatedIds().put(GeneratedId.PAYMENT_ID, UUID.randomUUID());
+            publisher.publishEvent(new OrderPayedEvent(event.data()));
     }
 
 }

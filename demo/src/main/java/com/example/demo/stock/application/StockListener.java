@@ -26,17 +26,17 @@ public class StockListener {
     @ApplicationModuleListener
     public void handle(OrderPlacedEvent event){
         try {
-            stockEventService.updateProductQuantity(event.getData().items());
-            event.getData().generatedIds().put(GeneratedId.STOCK_ID, UUID.randomUUID());
-            publisher.publishEvent(new OrderProductStockVerifiedEvent(event.getData()));
+            stockEventService.updateProductQuantity(event.data().items());
+            event.data().generatedIds().put(GeneratedId.STOCK_ID, UUID.randomUUID());
+            publisher.publishEvent(new OrderProductStockVerifiedEvent(event.data()));
         } catch (NotEnoughStockException e) {
-            publisher.publishEvent(new OrderCanceledEvent(event.getData(), OrderCancellingCause.NOT_ENOUGH_STOCK));
+            publisher.publishEvent(new OrderCanceledEvent(event.data(), OrderCancellingCause.NOT_ENOUGH_STOCK));
         }
     }
     @ApplicationModuleListener
     public void handle(OrderCanceledEvent event){
-           if(event.getData().generatedIds().containsKey(GeneratedId.STOCK_ID))
-             stockEventService.rollbackProductQuantity(event.getData().items());
+           if(event.data().generatedIds().containsKey(GeneratedId.STOCK_ID))
+             stockEventService.rollbackProductQuantity(event.data().items());
     }
 
 }

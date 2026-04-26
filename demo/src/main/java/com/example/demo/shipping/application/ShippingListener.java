@@ -25,11 +25,11 @@ public class ShippingListener {
 
     @ApplicationModuleListener
     public void handle(OrderPayedEvent event){
-        OrderShippingData orderShipping = event.getData().shipping();
+        OrderShippingData orderShipping = event.data().shipping();
             // save customer shipping info
         UUID shippingId = UUID.randomUUID();
-        event.getData().generatedIds().put(GeneratedId.LOCATION_ID, shippingId);
+        event.data().generatedIds().put(GeneratedId.LOCATION_ID, shippingId);
             publisher.publishEvent(new NotificationEvent(UUID.randomUUID(),"adnan", "Order Shipped", "Order Shipped"));
-            publisher.publishEvent(new OrderShippedEvent(event.getData()));
+            publisher.publishEvent(new OrderShippedEvent(event.data()));
     }
 }
