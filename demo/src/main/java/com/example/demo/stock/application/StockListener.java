@@ -9,6 +9,7 @@ import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class StockListener {
             publisher.publishEvent(new OrderProductStockVerifiedEvent(event.data()));
         } catch (NotEnoughStockException e) {
             publisher.publishEvent(new OrderCanceledEvent(event.data(), OrderCancellingCause.NOT_ENOUGH_STOCK));
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
     }
     @ApplicationModuleListener
