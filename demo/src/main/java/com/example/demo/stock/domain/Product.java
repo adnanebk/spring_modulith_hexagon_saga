@@ -1,30 +1,14 @@
-package com.example.demo.stock.infra.entities;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+package com.example.demo.stock.domain;
 
 import java.math.BigDecimal;
 
-@Entity
-public class ProductEntity {
+public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private BigDecimal price;
     private int amountInStock;
-
-    public ProductEntity( String name, BigDecimal price, int amountInStock) {
-        this.name = name;
-        this.amountInStock = amountInStock;
-        this.price = price;
-    }
-
-    public ProductEntity() {
-    }
+    private int previousAmountInStock;
 
     public Integer getId() {
         return id;
@@ -48,6 +32,14 @@ public class ProductEntity {
 
     public void setAmountInStock(int amountInStock) {
         this.amountInStock = amountInStock;
+    }
+
+    public int getPreviousAmountInStock() {
+        return previousAmountInStock;
+    }
+
+    public void setPreviousAmountInStock(int previousAmountInStock) {
+        this.previousAmountInStock = previousAmountInStock;
     }
 
     public BigDecimal getPrice() {

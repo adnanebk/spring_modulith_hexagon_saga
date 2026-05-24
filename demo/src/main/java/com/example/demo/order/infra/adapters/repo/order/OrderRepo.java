@@ -1,13 +1,11 @@
 package com.example.demo.order.infra.adapters.repo.order;
 
-import com.example.demo.order.domain.models.OrderInput;
-import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.order.domain.Order;
+import com.example.demo.order.domain.OrderStatus;
 import com.example.demo.order.infra.adapters.mappers.OrderMapper;
 import com.example.demo.order.infra.entities.OrderEntity;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.stereotype.Repository;
-
-import java.util.UUID;
 
 
 @Repository
@@ -23,7 +21,7 @@ public class OrderRepo implements OrderRepoPort {
 
 
     @Override
-    public Integer create(OrderInput order) {
+    public Integer create(Order order) {
         OrderEntity entity = orderMapper.toEntity(order);
         return  orderSpringRepo.save(entity).getId();
     }
@@ -31,11 +29,6 @@ public class OrderRepo implements OrderRepoPort {
     @Override
     public void updateStatus(Integer id, OrderStatus status) {
         orderSpringRepo.updateStatus(id, status);
-    }
-
-    @Override
-    public void update(Integer id, OrderStatus orderStatus, UUID locationId, UUID transactionId) {
-        orderSpringRepo.update(id, orderStatus,locationId,transactionId);
     }
 
 

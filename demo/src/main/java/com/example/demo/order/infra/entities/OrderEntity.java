@@ -1,11 +1,13 @@
 package com.example.demo.order.infra.entities;
 
-import com.example.demo.order.domain.models.OrderStatus;
+import com.example.demo.order.domain.OrderStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 public class OrderEntity {
@@ -13,17 +15,18 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer  id;
-    private UUID transactionId;
-    private UUID locationId;
+
+    private Integer  userId;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private List<ItemEntity> items;
-    private Double total;
+    private BigDecimal totalPrice;
     private OrderStatus status;
-    private Integer shippingId;
-    private Integer paymentId;
+
+    @CreationTimestamp
     private LocalDateTime createdAt;
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
 
@@ -37,12 +40,12 @@ public class OrderEntity {
 
 
 
-    public Double getTotal() {
-        return total;
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotal(Double total) {
-        this.total = total;
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public OrderStatus getStatus() {
@@ -61,14 +64,6 @@ public class OrderEntity {
         this.items = items;
     }
 
-    public Integer getShippingId() {
-        return shippingId;
-    }
-
-    public void setShippingId(Integer shippingId) {
-        this.shippingId = shippingId;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -85,27 +80,12 @@ public class OrderEntity {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getPaymentId() {
-        return paymentId;
+
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setPaymentId(Integer paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public UUID getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(UUID transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public UUID getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(UUID locationId) {
-        this.locationId = locationId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

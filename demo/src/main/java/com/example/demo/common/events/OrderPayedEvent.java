@@ -1,6 +1,5 @@
 package com.example.demo.common.events;
 
-import com.example.demo.common.events.data.OrderData;
 
-public record OrderPayedEvent(OrderData data) {
+public record OrderPayedEvent(Integer orderId,Integer userId) {
 }
