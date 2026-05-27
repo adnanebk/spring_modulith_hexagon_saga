@@ -2,6 +2,6 @@ package com.example.demo.coupon.domain;
 
 import java.math.BigDecimal;
 
-public record AppliedCouponSummary(BigDecimal totalAmount, BigDecimal discountAmount, DiscountType discountType,
+public record AppliedCouponSummary(BigDecimal discountAmount, BigDecimal originalAmount, DiscountType discountType,
                                    CouponUsage couponUsage) {
 }

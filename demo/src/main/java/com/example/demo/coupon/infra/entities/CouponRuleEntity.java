@@ -16,7 +16,8 @@ public class CouponRuleEntity {
     
     @Enumerated(EnumType.STRING)
     private RuleType type;
-    
+
+    @Column(name = "`value`")
     private String value;
 
     public Integer getId() {

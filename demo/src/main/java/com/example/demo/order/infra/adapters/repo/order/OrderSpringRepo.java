@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 public interface OrderSpringRepo extends CrudRepository<OrderEntity, Integer> {
 
@@ -16,5 +18,4 @@ public interface OrderSpringRepo extends CrudRepository<OrderEntity, Integer> {
     @Modifying(clearAutomatically = true,flushAutomatically = true)
     @Query("UPDATE OrderEntity o SET o.status = :status  WHERE o.id= :id")
     void updateStatus(Integer id, OrderStatus status);
-
 }

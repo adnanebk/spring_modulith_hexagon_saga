@@ -22,6 +22,9 @@ public class OrderEntity {
     @JoinColumn(name = "order_id")
     private List<ItemEntity> items;
     private BigDecimal totalPrice;
+    private BigDecimal totalWithDiscount;
+
+
     private OrderStatus status;
 
     @CreationTimestamp
@@ -87,5 +90,13 @@ public class OrderEntity {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public BigDecimal getTotalWithDiscount() {
+        return totalWithDiscount;
+    }
+
+    public void setTotalWithDiscount(BigDecimal totalWithDiscount) {
+        this.totalWithDiscount = totalWithDiscount;
     }
 }

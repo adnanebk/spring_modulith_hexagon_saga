@@ -1,15 +1,15 @@
 package com.example.demo.order.domain;
 
-import com.example.demo.common.data.OrderItemWithPrice;
+import com.example.demo.common.data.OrderedItem;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class Order {
 
-    private List<OrderItemWithPrice> items;
+    private List<OrderedItem> items;
     private BigDecimal totalPrice;
-    private BigDecimal discountPrice;
+    private BigDecimal totalWithDiscount;
     private Integer userId;
     private OrderShipping shipping;
     private OrderStatus status;
@@ -37,11 +37,11 @@ public class Order {
     }
 
 
-    public List<OrderItemWithPrice> getItems() {
+    public List<OrderedItem> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItemWithPrice> items) {
+    public void setItems(List<OrderedItem> items) {
         this.items = items;
     }
 
@@ -63,11 +63,11 @@ public class Order {
         this.userId = userId;
     }
 
-    public BigDecimal getDiscountPrice() {
-        return discountPrice;
+    public BigDecimal getTotalWithDiscount() {
+        return totalWithDiscount;
     }
 
-    public void setDiscountPrice(BigDecimal discountPrice) {
-        this.discountPrice = discountPrice;
+    public void setTotalWithDiscount(BigDecimal totalWithDiscount) {
+        this.totalWithDiscount = totalWithDiscount;
     }
 }

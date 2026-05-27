@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "coupon_entity",indexes = {@Index(columnList = "code",name = "isc_code",unique = true)})
 public class CouponEntity {
 
     @Id
@@ -82,6 +83,7 @@ public class CouponEntity {
 
     public void setRules(List<CouponRuleEntity> rules) {
         this.rules = rules;
+        rules.forEach(rule->rule.setCoupon(this));
     }
 
 

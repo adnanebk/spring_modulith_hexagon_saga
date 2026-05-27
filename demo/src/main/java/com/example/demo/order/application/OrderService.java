@@ -2,7 +2,7 @@ package com.example.demo.order.application;
 
 
 import com.example.demo.common.data.OrderDetails;
-import com.example.demo.common.data.OrderItemWithPrice;
+import com.example.demo.common.data.OrderedItem;
 import com.example.demo.common.data.StockedProduct;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
@@ -53,32 +53,38 @@ public class OrderService implements OrderServicePort {
 
 
         List<StockedProduct> productsInStock = productClientPort.getProducts(new ArrayList<>(quantityMap.keySet()));
+
         if (productsInStock.size() != quantityMap.size())
             throw new IllegalArgumentException("Some products are not in stock");
 
-        List<OrderItemWithPrice> orderItemsWithPrice = productsInStock
-                        .stream()
-                        .map(product->
-                        {
-                            Integer itemQuantity = quantityMap.getOrDefault(product.productId(), 0);
-                            return new OrderItemWithPrice(itemQuantity,product.productId(),product.price()
-                            );
-                        })
-                        .toList();
+        List<OrderedItem> orderedItems = mapToOrderedItems(productsInStock, quantityMap);
 
-        Order order = buildOrder(userId, orderItemsWithPrice);
+        Order order = buildOrder(userId, orderedItems);
         order.calculateTotalPrice();
 
             BigDecimal amountAfterDiscount =  Optional.ofNullable(couponCode).filter(StringUtils::hasText)
                             .map(code -> discountRepoClient.discount(userId, couponCode, order.getTotalPrice()))
                             .orElse(order.getTotalPrice());
-              order.setDiscountPrice(amountAfterDiscount);
+              order.setTotalWithDiscount(amountAfterDiscount);
 
         Integer orderId = orderRepoPort.create(order);
-        OrderDetails orderDetails = new OrderDetails(orderId,userId, paymentToken, orderItemsWithPrice, amountAfterDiscount,couponCode);
+        OrderDetails orderDetails = new OrderDetails(orderId,userId, paymentToken, orderedItems, amountAfterDiscount,couponCode);
         publisher.publishEvent(new OrderPlacedEvent(orderDetails));
         return orderId;
     }
+
+    private static List<OrderedItem> mapToOrderedItems(List<StockedProduct> productsInStock, Map<Integer, Integer> quantityMap) {
+        return productsInStock
+                .stream()
+                .map(product ->
+                {
+                    Integer itemQuantity = quantityMap.getOrDefault(product.productId(), 0);
+                    return new OrderedItem(itemQuantity, product.productId(), product.price()
+                    );
+                })
+                .toList();
+    }
+
     @Transactional
     @Override
     public Integer placeOrder(Integer userId, List<OrderItem> orderItems, String paymentToken){
@@ -104,7 +110,7 @@ public class OrderService implements OrderServicePort {
         discountRepoClient.saveCouponUsage(userId,orderId,couponCode);
     }
 
-    private  Order buildOrder(Integer userId, List<OrderItemWithPrice> orderItems) {
+    private  Order buildOrder(Integer userId, List<OrderedItem> orderItems) {
         Order order = new Order();
         order.setUserId(userId);
         order.setItems(orderItems);

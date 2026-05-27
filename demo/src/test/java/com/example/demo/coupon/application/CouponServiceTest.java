@@ -57,8 +57,8 @@ class CouponServiceTest {
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal("90.00"), result.totalAmount());
-        assertEquals(totalAmount, result.discountAmount());
+        assertEquals(new BigDecimal("90.00"), result.discountAmount());
+        assertEquals(totalAmount, result.originalAmount());
         assertEquals(DiscountType.FIXED, result.discountType());
     }
 
@@ -78,8 +78,8 @@ class CouponServiceTest {
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal("80.00"), result.totalAmount());
-        assertEquals(totalAmount, result.discountAmount());
+        assertEquals(new BigDecimal("80.00"), result.discountAmount());
+        assertEquals(totalAmount, result.originalAmount());
         assertEquals(DiscountType.PERCENTAGE, result.discountType());
     }
 
@@ -138,8 +138,8 @@ class CouponServiceTest {
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
         assertNotNull(result);
-        assertEquals(BigDecimal.ZERO, result.totalAmount());
-        assertEquals(totalAmount, result.discountAmount());
+        assertEquals(BigDecimal.ZERO, result.discountAmount());
+        assertEquals(totalAmount, result.originalAmount());
     }
 
     @Test
@@ -158,7 +158,7 @@ class CouponServiceTest {
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal("90.00"), result.totalAmount());
+        assertEquals(new BigDecimal("90.00"), result.discountAmount());
     }
 
     @Test
@@ -177,7 +177,7 @@ class CouponServiceTest {
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal("90.00"), result.totalAmount());
+        assertEquals(new BigDecimal("90.00"), result.discountAmount());
     }
 
     private Coupon createCoupon(String code, Double discount, DiscountType discountType) {

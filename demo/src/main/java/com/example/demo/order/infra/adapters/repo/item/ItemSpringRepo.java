@@ -9,7 +9,5 @@ import java.util.List;
 
 public interface ItemSpringRepo extends JpaRepository<ItemEntity, Integer> {
 
-    @Override
-    @EntityGraph(attributePaths = {"ingredients"})
-    List<ItemEntity> findAllById(Iterable<Integer> integers);
+
 }

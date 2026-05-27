@@ -1,1 +1,0 @@
-alter table event_publication ALTER COLUMN SERIALIZED_EVENT SET DATA TYPE VARCHAR(4000)

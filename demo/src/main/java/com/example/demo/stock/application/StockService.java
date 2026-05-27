@@ -1,7 +1,7 @@
 package com.example.demo.stock.application;
 
 import com.example.demo.common.data.OrderDetails;
-import com.example.demo.common.data.OrderItemWithPrice;
+import com.example.demo.common.data.OrderedItem;
 import com.example.demo.common.data.StockedProduct;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.events.OrderStockFailedEvent;
@@ -30,9 +30,9 @@ public class StockService implements StockServicePort {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void updateProductQuantity(OrderDetails orderDetails) {
-        List<OrderItemWithPrice> items = orderDetails.items();
+        List<OrderedItem> items = orderDetails.items();
         List<Product> products = getCorrespondingProducts(items);
-            for (OrderItemWithPrice item : items) {
+            for (OrderedItem item : items) {
                 Product product = getCorrespondingProduct(item, products)
                         .orElseThrow(() -> new IllegalStateException("Product not found: " + item.productId()));
                 validate(item, product);
@@ -46,10 +46,10 @@ public class StockService implements StockServicePort {
     @Transactional
     @Override
     public void rollbackProductQuantity(OrderDetails orderDetails, String message) {
-        List<OrderItemWithPrice> items = orderDetails.items();
+        List<OrderedItem> items = orderDetails.items();
         List<Product> products = getCorrespondingProducts(items);
 
-        for (OrderItemWithPrice item : items) {
+        for (OrderedItem item : items) {
             getCorrespondingProduct(item, products).ifPresent(product ->
                     product.setAmountInStock(product.getAmountInStock() + item.quantity())
             );
@@ -70,17 +70,17 @@ public class StockService implements StockServicePort {
         return productRepoPort.getAllByIds(productIds).stream().map(p -> new StockedProduct(p.getId(), p.getPrice(), p.getAmountInStock())).toList();
     }
 
-    private void validate(OrderItemWithPrice item, Product product) {
+    private void validate(OrderedItem item, Product product) {
         if (product.getAmountInStock() < item.quantity()) {
             throw new NotEnoughStockException("Not enough stock for product " + item.productId());
         }
     }
 
-    private List<Product> getCorrespondingProducts(List<OrderItemWithPrice> items) {
-        return productRepoPort.getAllByIds(items.stream().map(OrderItemWithPrice::productId).toList());
+    private List<Product> getCorrespondingProducts(List<OrderedItem> items) {
+        return productRepoPort.getAllByIds(items.stream().map(OrderedItem::productId).toList());
     }
 
-    private Optional<Product> getCorrespondingProduct(OrderItemWithPrice item, List<Product> products) {
+    private Optional<Product> getCorrespondingProduct(OrderedItem item, List<Product> products) {
         return products.stream().filter(p -> p.getId().equals(item.productId())).findFirst();
     }
 }
