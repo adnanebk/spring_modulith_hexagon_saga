@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "coupon_entity",indexes = {@Index(columnList = "code",name = "isc_code",unique = true)})
+@Table(name = "coupon_entity",indexes = {@Index(columnList = "code",name = "idx_code",unique = true)})
 public class CouponEntity {
 
     @Id

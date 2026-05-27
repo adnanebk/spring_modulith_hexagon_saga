@@ -6,6 +6,7 @@ import com.example.demo.common.data.OrderedItem;
 import com.example.demo.common.data.StockedProduct;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
+import com.example.demo.common.data.CouponCodeUsage;
 import com.example.demo.order.domain.Order;
 import com.example.demo.order.domain.OrderItem;
 import com.example.demo.order.domain.OrderStatus;
@@ -107,7 +108,7 @@ public class OrderService implements OrderServicePort {
     @Override
     public void saveCouponUsage(Integer orderId, String couponCode, Integer userId) {
 
-        discountRepoClient.saveCouponUsage(userId,orderId,couponCode);
+        discountRepoClient.saveCouponUsage(new CouponCodeUsage(userId, orderId, couponCode));
     }
 
     private  Order buildOrder(Integer userId, List<OrderedItem> orderItems) {

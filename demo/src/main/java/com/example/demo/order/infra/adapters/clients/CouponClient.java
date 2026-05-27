@@ -1,5 +1,6 @@
 package com.example.demo.order.infra.adapters.clients;
 
+import com.example.demo.common.data.CouponCodeUsage;
 import com.example.demo.coupon.ports.CouponServicePort;
 import com.example.demo.order.ports.out.DiscountRepoClient;
 import org.springframework.stereotype.Component;
@@ -17,8 +18,8 @@ public class CouponClient implements DiscountRepoClient {
     }
 
     @Override
-    public void saveCouponUsage(Integer userId, Integer orderId, String couponCode) {
-        couponServicePort.saveCouponUsage(userId, orderId, couponCode);
+    public void saveCouponUsage(CouponCodeUsage couponCodeUsage) {
+        couponServicePort.saveCouponUsage(couponCodeUsage);
     }
 
     @Override

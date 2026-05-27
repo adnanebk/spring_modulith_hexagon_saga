@@ -4,8 +4,18 @@ import com.example.demo.coupon.domain.ApplyCouponRequest;
 import com.example.demo.coupon.domain.RuleType;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
+import java.time.LocalDate;
+
 @Component
-public class expiryValidator implements RuleValidator {
+public class expirationValidator implements RuleValidator {
+
+    private final Clock clock;
+
+    public expirationValidator(Clock clock) {
+        this.clock = clock;
+    }
+
     @Override
     public RuleType getRuleType() {
         return RuleType.EXPIRATION;
@@ -13,7 +23,8 @@ public class expiryValidator implements RuleValidator {
 
     @Override
     public boolean validate(ApplyCouponRequest applyCouponRequest, String ruleValue) {
-        return applyCouponRequest.couponUsage().getUsedAt()
-                .isBefore(applyCouponRequest.coupon().getEndDate());
+        LocalDate endDate = applyCouponRequest.coupon().getEndDate();
+        return !LocalDate.now(clock)
+                .isAfter(endDate);
     }
 }

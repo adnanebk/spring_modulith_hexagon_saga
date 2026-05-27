@@ -2,7 +2,6 @@ package com.example.demo.order;
 
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
-import com.example.demo.coupon.application.CouponService;
 import com.example.demo.coupon.domain.DiscountType;
 import com.example.demo.coupon.domain.RuleType;
 import com.example.demo.coupon.infra.adapters.repo.coupon.CouponSpringRepo;
@@ -13,9 +12,8 @@ import com.example.demo.order.domain.OrderItem;
 import com.example.demo.order.domain.OrderStatus;
 import com.example.demo.order.infra.adapters.repo.order.OrderSpringRepo;
 import com.example.demo.order.infra.entities.OrderEntity;
-import com.example.demo.order.ports.out.OrderRepoPort;
-import com.example.demo.stock.infra.entities.ProductEntity;
 import com.example.demo.stock.infra.adapters.repo.ProductSpringRepo;
+import com.example.demo.stock.infra.entities.ProductEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.modulith.test.EnableScenarios;
 import org.springframework.modulith.test.Scenario;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.example.demo.coupon.domain;
 
+
 import java.time.LocalDate;
 
 public class CouponUsage {
@@ -20,6 +21,9 @@ public class CouponUsage {
         this.userId = userId;
     }
 
+    public boolean isNew() {
+        return orderId == null;
+    }
     public Integer getCouponId() {
         return couponId;
     }
@@ -51,4 +55,5 @@ public class CouponUsage {
     public void setUsedAt(LocalDate usedAt) {
         this.usedAt = usedAt;
     }
+
 }

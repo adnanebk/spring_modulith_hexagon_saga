@@ -1,9 +1,6 @@
 package com.example.demo.coupon.infra.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -15,7 +12,11 @@ public class CouponUsageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer couponId;
+    @ManyToOne
+    @JoinColumn(name = "coupon_id")
+    private CouponEntity coupon;
+
+    @Column(unique = true)
     private Integer orderId;
     private Integer userId;
     @CreationTimestamp
@@ -30,13 +31,6 @@ public class CouponUsageEntity {
         this.id = id;
     }
 
-    public Integer getCouponId() {
-        return couponId;
-    }
-
-    public void setCouponId(Integer couponId) {
-        this.couponId = couponId;
-    }
 
     public Integer getOrderId() {
         return orderId;
@@ -62,4 +56,11 @@ public class CouponUsageEntity {
         this.usedAt = usedAt;
     }
 
+    public CouponEntity getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(CouponEntity coupon) {
+        this.coupon = coupon;
+    }
 }

@@ -1,9 +1,7 @@
 package com.example.demo.coupon.application;
 
-import com.example.demo.coupon.domain.AppliedCouponSummary;
-import com.example.demo.coupon.domain.ApplyCouponRequest;
-import com.example.demo.coupon.domain.Coupon;
-import com.example.demo.coupon.domain.CouponUsage;
+import com.example.demo.common.data.CouponCodeUsage;
+import com.example.demo.coupon.domain.*;
 import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
 import com.example.demo.coupon.ports.CouponServicePort;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,14 +35,10 @@ public class CouponService implements CouponServicePort {
 
         Coupon coupon = couponRepositoryPort.findByCode(couponCode)
                 .orElseThrow(() -> new IllegalArgumentException("Coupon code not found"));
-
-        CouponUsage couponUsage =
-                couponUsageRepositoryPort
-                        .findLastUsageByUserIdAndCouponId(userId, coupon.getId())
-                        .orElseGet(() -> new CouponUsage(userId, coupon.getId()));
+        List<CouponUsage> usageHistory = couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId());
 
         ApplyCouponRequest request =
-                new ApplyCouponRequest(coupon, couponUsage, totalAmount);
+                new ApplyCouponRequest(coupon, usageHistory, totalAmount);
 
         validateCouponEligibility(coupon, request);
 
@@ -53,16 +48,17 @@ public class CouponService implements CouponServicePort {
         return new AppliedCouponSummary(
                 finalAmount,
                 totalAmount,
-                coupon.getDiscountType(),
-                couponUsage
+                coupon.getDiscountType()
         );
     }
 
+    @Transactional
     @Override
-    public void saveCouponUsage(Integer userId, Integer orderId, String couponCode) {
-        Integer couponId = couponRepositoryPort.findByCode(couponCode)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon code not found")).getId();
-        CouponUsage couponUsage = new CouponUsage(couponId,orderId,userId);
+    public void saveCouponUsage(CouponCodeUsage couponCodeUsage) {
+        Integer couponId = couponRepositoryPort.findByCode(couponCodeUsage.couponCode())
+                .orElseThrow(() -> new IllegalArgumentException("Coupon code not found"))
+                .getId();
+        CouponUsage couponUsage = new CouponUsage(couponId,couponCodeUsage.orderId(),couponCodeUsage.userId());
         couponUsageRepositoryPort.save(couponUsage);
     }
 

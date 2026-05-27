@@ -5,6 +5,7 @@ import com.example.demo.coupon.infra.adapters.mappers.CouponUsageMapper;
 import com.example.demo.coupon.ports.CouponUsageRepositoryPort;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,9 +20,9 @@ public class CouponUsageRepository implements CouponUsageRepositoryPort {
     }
 
     @Override
-    public Optional<CouponUsage> findLastUsageByUserIdAndCouponId(Integer userId, Integer couponId) {
-        return couponUsageSpringRepo.findFirstByUserIdAndCouponIdOrderByUsedAtDesc(userId, couponId)
-        .map(couponUsageMapper::toDomain);
+    public List<CouponUsage> findAllByUserIdAndCouponId(Integer userId, Integer couponId) {
+        return couponUsageSpringRepo.findByUserIdAndCouponIdOrderByUsedAtDesc(userId, couponId)
+                .stream().map(couponUsageMapper::toDomain).toList();
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.example.demo.coupon.application;
 
 import com.example.demo.coupon.domain.*;
+import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
 import com.example.demo.coupon.domain.validators.MinAmountValidator;
 import com.example.demo.coupon.domain.validators.OncerPerUserValidator;
-import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
-import com.example.demo.coupon.domain.validators.expiryValidator;
+import com.example.demo.coupon.domain.validators.expirationValidator;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
 import com.example.demo.coupon.ports.CouponUsageRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +14,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CouponServiceTest {
@@ -37,7 +38,7 @@ class CouponServiceTest {
         CouponRuleValidatorRegistry validatorRegistry = new CouponRuleValidatorRegistry(List.of(
                 new MinAmountValidator(),
                 new OncerPerUserValidator(),
-                new expiryValidator()
+                new expirationValidator(Clock.systemUTC())
         ));
         couponService = new CouponService(couponRepositoryPort, validatorRegistry, couponUsageRepositoryPort);
     }
@@ -51,8 +52,8 @@ class CouponServiceTest {
         Coupon coupon = createCoupon(couponCode, 10.0, DiscountType.FIXED);
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.of(coupon));
-        when(couponUsageRepositoryPort.findLastUsageByUserIdAndCouponId(userId, coupon.getId()))
-                .thenReturn(Optional.empty());
+        when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
+                .thenReturn(List.of());
 
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
@@ -72,8 +73,8 @@ class CouponServiceTest {
         CouponUsage couponUsage = new CouponUsage(userId, coupon.getId());
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.of(coupon));
-        when(couponUsageRepositoryPort.findLastUsageByUserIdAndCouponId(userId, coupon.getId()))
-                .thenReturn(Optional.of(couponUsage));
+        when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
+                .thenReturn(List.of(couponUsage));
 
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
@@ -109,8 +110,8 @@ class CouponServiceTest {
         CouponUsage couponUsage = new CouponUsage(userId, coupon.getId());
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.of(coupon));
-        when(couponUsageRepositoryPort.findLastUsageByUserIdAndCouponId(userId, coupon.getId()))
-                .thenReturn(Optional.of(couponUsage));
+        when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
+                .thenReturn(List.of(couponUsage));
 
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
@@ -132,8 +133,8 @@ class CouponServiceTest {
         CouponUsage couponUsage = new CouponUsage(userId, coupon.getId());
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.of(coupon));
-        when(couponUsageRepositoryPort.findLastUsageByUserIdAndCouponId(userId, coupon.getId()))
-                .thenReturn(Optional.of(couponUsage));
+        when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
+                .thenReturn(List.of(couponUsage));
 
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
@@ -152,8 +153,8 @@ class CouponServiceTest {
         CouponUsage couponUsage = new CouponUsage(userId, coupon.getId());
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.of(coupon));
-        when(couponUsageRepositoryPort.findLastUsageByUserIdAndCouponId(userId, coupon.getId()))
-                .thenReturn(Optional.of(couponUsage));
+        when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
+                .thenReturn(List.of(couponUsage));
 
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 
@@ -168,11 +169,10 @@ class CouponServiceTest {
         BigDecimal totalAmount = new BigDecimal("100.00");
 
         Coupon coupon = createCouponWithRule(couponCode, 10.0, DiscountType.FIXED, RuleType.ONCE_PER_USER, "true");
-        CouponUsage couponUsage = new CouponUsage(userId, coupon.getId());
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.of(coupon));
-        when(couponUsageRepositoryPort.findLastUsageByUserIdAndCouponId(userId, coupon.getId()))
-                .thenReturn(Optional.of(couponUsage));
+        when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
+                .thenReturn(List.of());
 
         AppliedCouponSummary result = couponService.applyCoupon(userId, couponCode, totalAmount);
 

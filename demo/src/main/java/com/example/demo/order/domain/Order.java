@@ -13,6 +13,7 @@ public class Order {
     private Integer userId;
     private OrderShipping shipping;
     private OrderStatus status;
+    private Integer couponId;
 
     public void calculateTotalPrice() {
         this.totalPrice = this.items.stream()
@@ -69,5 +70,13 @@ public class Order {
 
     public void setTotalWithDiscount(BigDecimal totalWithDiscount) {
         this.totalWithDiscount = totalWithDiscount;
+    }
+
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
     }
 }

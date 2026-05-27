@@ -1,11 +1,13 @@
 package com.example.demo.order.ports.out;
 
 
+import com.example.demo.common.data.CouponCodeUsage;
+
 import java.math.BigDecimal;
 
 public interface DiscountRepoClient {
 
-     void saveCouponUsage(Integer userId, Integer orderId, String couponCode);
+     void saveCouponUsage(CouponCodeUsage couponCodeUsage);
 
     BigDecimal discount(
             Integer userId,

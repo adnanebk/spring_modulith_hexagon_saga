@@ -13,6 +13,6 @@ public class OncerPerUserValidator implements RuleValidator {
 
     @Override
     public boolean validate(ApplyCouponRequest applyCouponRequest, String ruleValue) {
-        return applyCouponRequest.couponUsage().getUsedAt()==null;
+        return applyCouponRequest.usageHistory().isEmpty();
     }
 }

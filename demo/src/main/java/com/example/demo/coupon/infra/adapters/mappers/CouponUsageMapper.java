@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class CouponUsageMapper {
 
     public CouponUsage toDomain(CouponUsageEntity entity) {
-        CouponUsage couponUsage = new CouponUsage(entity.getUserId(), entity.getCouponId());
+        CouponUsage couponUsage = new CouponUsage(entity.getUserId(), entity.getCoupon().getId());
         BeanUtils.copyProperties(entity, couponUsage);
         return couponUsage;
     }
