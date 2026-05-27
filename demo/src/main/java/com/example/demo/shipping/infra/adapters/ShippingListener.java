@@ -18,7 +18,7 @@ public class ShippingListener {
 
     @ApplicationModuleListener
     public void handle(OrderPayedEvent event) {
-       shippingServicePort.shipOrder(event.orderId(), event.orderId());
+       shippingServicePort.shipOrder(event.orderDetails());
 
     }
 }

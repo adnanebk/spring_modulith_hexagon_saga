@@ -1,7 +1,9 @@
 package com.example.demo.common.events;
 
 
-public record OrderShippedEvent(Integer orderId, Integer userId) {
+import com.example.demo.common.data.OrderDetails;
+
+public record OrderShippedEvent(OrderDetails orderDetails) {
 
 
 }

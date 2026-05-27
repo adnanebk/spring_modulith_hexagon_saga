@@ -1,5 +1,6 @@
 package com.example.demo.stock.infra.adapters;
 
+import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.events.OrderPaymentFailedEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.stock.application.StockService;
@@ -17,10 +18,11 @@ public class StockListener {
 
     @ApplicationModuleListener
     public void handle(OrderPlacedEvent event){
+        OrderDetails orderDetails = event.orderDetails();
         try {
-            stockService.updateProductQuantity(event.orderDetails());
+            stockService.updateProductQuantity(orderDetails);
         } catch (RuntimeException e) {
-            stockService.cancelUpdateQuantity(event.orderDetails().orderId(),e.getMessage());
+            stockService.cancelUpdateQuantity(orderDetails.orderId(),e.getMessage());
         }
     }
 

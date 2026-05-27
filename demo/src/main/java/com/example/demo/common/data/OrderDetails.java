@@ -1,8 +1,11 @@
 package com.example.demo.common.data;
 
+import jakarta.annotation.Nullable;
+
 import java.math.BigDecimal;
 import java.util.List;
 
-public record OrderDetails(Integer orderId, String paymentToken, List<OrderItemWithPrice> items, BigDecimal totalPrice) {
+public record OrderDetails(Integer orderId,Integer userId, String paymentToken, List<OrderItemWithPrice> items,@Nullable BigDecimal totalPrice,
+                          @Nullable String couponCode) {
 
 }

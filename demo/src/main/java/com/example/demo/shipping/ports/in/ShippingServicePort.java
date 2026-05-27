@@ -1,5 +1,7 @@
 package com.example.demo.shipping.ports.in;
 
+import com.example.demo.common.data.OrderDetails;
+
 public interface ShippingServicePort {
-    void shipOrder(Integer userId, Integer orderId);
+    void shipOrder(OrderDetails orderDetails);
 }

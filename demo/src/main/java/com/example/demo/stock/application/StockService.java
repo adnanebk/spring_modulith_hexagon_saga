@@ -1,10 +1,10 @@
 package com.example.demo.stock.application;
 
+import com.example.demo.common.data.OrderDetails;
+import com.example.demo.common.data.OrderItemWithPrice;
 import com.example.demo.common.data.StockedProduct;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.events.OrderStockFailedEvent;
-import com.example.demo.common.data.OrderDetails;
-import com.example.demo.common.data.OrderItemWithPrice;
 import com.example.demo.stock.domain.Product;
 import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import com.example.demo.stock.ports.in.ProductRepoPort;
@@ -39,7 +39,7 @@ public class StockService implements StockServicePort {
                 product.setAmountInStock(product.getAmountInStock() - item.quantity());
             }
             productRepoPort.saveAll(products);
-            publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails.orderId(), orderDetails));
+            publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails));
 
     }
 

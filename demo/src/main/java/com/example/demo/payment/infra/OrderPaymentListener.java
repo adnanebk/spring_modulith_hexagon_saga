@@ -1,7 +1,7 @@
 package com.example.demo.payment.infra;
 
-import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.data.OrderDetails;
+import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.payment.application.PaymentService;
 import com.example.demo.payment.ports.in.PaymentServicePort;
 import org.springframework.modulith.events.ApplicationModuleListener;
@@ -19,7 +19,7 @@ private final PaymentServicePort paymentServicePort;
     @ApplicationModuleListener
     public void handle(OrderProductStockVerifiedEvent event){
         OrderDetails orderDetails = event.orderDetails();
-        paymentServicePort.confirmPayment(event.userId(),orderDetails);
+        paymentServicePort.confirmPayment(orderDetails);
     }
 
 }

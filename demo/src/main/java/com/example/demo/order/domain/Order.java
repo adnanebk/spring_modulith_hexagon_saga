@@ -9,6 +9,7 @@ public class Order {
 
     private List<OrderItemWithPrice> items;
     private BigDecimal totalPrice;
+    private BigDecimal discountPrice;
     private Integer userId;
     private OrderShipping shipping;
     private OrderStatus status;
@@ -60,5 +61,13 @@ public class Order {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public BigDecimal getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(BigDecimal discountPrice) {
+        this.discountPrice = discountPrice;
     }
 }

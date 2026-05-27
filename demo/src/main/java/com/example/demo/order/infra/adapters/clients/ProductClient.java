@@ -1,4 +1,4 @@
-package com.example.demo.payment.infra;
+package com.example.demo.order.infra.adapters.clients;
 
 import com.example.demo.common.data.StockedProduct;
 import com.example.demo.order.ports.out.ProductClientPort;

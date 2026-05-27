@@ -1,8 +1,8 @@
 package com.example.demo.payment.application;
 
+import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.events.OrderPayedEvent;
 import com.example.demo.common.events.OrderPaymentFailedEvent;
-import com.example.demo.common.data.OrderDetails;
 import com.example.demo.payment.ports.in.PaymentServicePort;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,13 @@ public class PaymentService implements PaymentServicePort {
     }
 
     @Override
-    public void confirmPayment(Integer userId, OrderDetails orderDetails) {
+    public void confirmPayment( OrderDetails orderDetails) {
         // handle payment
         if(orderDetails.paymentToken().isEmpty()) {
             publisher.publishEvent(new OrderPaymentFailedEvent(orderDetails, "Payment token is empty"));
             return;
         }
-        publisher.publishEvent(new OrderPayedEvent(orderDetails.orderId(),userId));
+        publisher.publishEvent(new OrderPayedEvent(orderDetails));
     }
 
 

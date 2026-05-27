@@ -1,5 +1,6 @@
 package com.example.demo.shipping.application;
 
+import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.shipping.ports.in.ShippingServicePort;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,7 +16,7 @@ public class ShippingService implements ShippingServicePort {
     }
 
     @Override
-    public void shipOrder(Integer userId, Integer orderId) {
-        publisher.publishEvent(new OrderShippedEvent(orderId, userId));
+    public void shipOrder(OrderDetails orderDetails) {
+        publisher.publishEvent(new OrderShippedEvent(orderDetails));
     }
 }
