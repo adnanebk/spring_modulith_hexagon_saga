@@ -16,6 +16,7 @@ The application is organized into several modules following Spring Modulith conv
 - **stock**: Inventory and product stock management
 - **payment**: Payment processing and validation
 - **shipping**: Order shipping and fulfillment
+- **coupon**: Discount coupon management and validation
 - **common**: Shared data structures, events, and enums
   an example of order module diagram
 
@@ -32,11 +33,12 @@ Each module follows hexagonal architecture principles:
 ### Saga Pattern
 
 The system uses the Saga pattern to manage distributed transactions:
-1. Order is placed
+1. Order is placed (with optional coupon code)
 2. Stock is verified and reserved
 3. Payment is processed
 4. Order is shipped
-5. Notifications are sent
+5. Coupon usage is saved (if coupon was applied)
+6. Notifications are sent
 
 Each step publishes events that trigger the next step in the saga, with compensating actions for failure scenarios.
 
@@ -56,6 +58,7 @@ Each step publishes events that trigger the next step in the saga, with compensa
 - Saga pattern for distributed transaction management
 - Hexagonal architecture with ports and adapters
 - REST API for order placement
+- Discount coupon system with validation rules (minimum amount, once per user, expiration)
 - Automatic event publication and consumption
 - Transactional data consistency within modules
 
@@ -114,11 +117,18 @@ src/main/java/com/example/demo/
 │   ├── domain/
 │   ├── infra/
 │   └── ports/
-└── shipping/             # Shipping module
-    ├── application/
-    ├── domain/
-    ├── infra/
-    └── ports/
+├── shipping/             # Shipping module
+│   ├── application/
+│   ├── domain/
+│   ├── infra/
+│   └── ports/
+└── coupon/               # Coupon module
+    ├── application/      # Coupon use cases
+    ├── domain/          # Coupon entities and value objects
+    ├── infra/           # Infrastructure adapters
+    │   ├── adapters/    # Repository adapters, mappers
+    │   └── entities/    # JPA entities
+    └── ports/           # Input/Output ports
 ```
 
 ## API Endpoints
@@ -137,7 +147,8 @@ Request body:
       "productId": 1,
       "quantity": 2
     }
-  ]
+  ],
+  "couponCode": "SAVE10"
 }
 ```
 
@@ -146,7 +157,29 @@ Response:
 123
 ```
 
-Returns the order ID.
+Returns the order ID. The `couponCode` field is optional and applies discount if valid.
+
+## Coupon Module
+
+The coupon module provides discount functionality with flexible validation rules:
+
+### Coupon Types
+
+- **Fixed Discount**: Subtracts a fixed amount from the total
+- **Percentage Discount**: Subtracts a percentage from the total
+
+### Validation Rules
+
+- **MINIMUM_AMOUNT**: Ensures the order total meets a minimum threshold
+- **ONCE_PER_USER**: Restricts coupon usage to once per user
+- **EXPIRATION**: Validates coupon is within valid date range
+
+### Coupon Flow
+
+1. Customer provides coupon code during order placement
+2. System validates coupon code and applies validation rules
+3. Discount is calculated and applied to order total
+4. Upon successful order completion, coupon usage is recorded
 
 ## Event Flow
 
