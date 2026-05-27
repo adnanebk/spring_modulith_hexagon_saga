@@ -147,8 +147,7 @@ Request body:
       "productId": 1,
       "quantity": 2
     }
-  ],
-  "couponCode": "SAVE10"
+  ]
 }
 ```
 
@@ -157,7 +156,7 @@ Response:
 123
 ```
 
-Returns the order ID. The `couponCode` field is optional and applies discount if valid.
+Returns the order ID.
 
 ## Coupon Module
 
