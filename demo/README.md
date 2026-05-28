@@ -142,6 +142,7 @@ Request body:
 {
   "userId": 1,
   "paymentToken": "token123",
+  "couponCode": "SAVE10",
   "items": [
     {
       "productId": 1,

@@ -22,6 +22,6 @@ public class OrderController {
     public Integer placeOrder(@RequestBody OrderInputDto orderInputDto) {
         List<OrderedItem> orderItems = orderInputDto.items().stream()
                 .map(item -> new OrderedItem(item.productId(), item.quantity())).toList();
-        return orderService.placeOrder(new OrderRequest(orderInputDto.userId(), orderItems, orderInputDto.paymentToken()));
+        return orderService.placeOrder(new OrderRequest(orderInputDto.userId(), orderItems, orderInputDto.paymentToken(), orderInputDto.couponCode()));
     }
 }
