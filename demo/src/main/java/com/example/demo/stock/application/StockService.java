@@ -27,7 +27,7 @@ public class StockService implements StockServicePort {
         this.publisher = publisher;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+   @Transactional
     @Override
     public void updateProductQuantity(OrderDetails orderDetails) {
         List<OrderedItem> items = orderDetails.items();
@@ -60,6 +60,7 @@ public class StockService implements StockServicePort {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void cancelUpdateQuantity(Integer orderId, String message){
         publisher.publishEvent(new OrderStockFailedEvent(orderId, message));
 

@@ -7,6 +7,7 @@ import com.example.demo.stock.application.StockService;
 import com.example.demo.stock.ports.in.StockServicePort;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Component
 public class StockListener {
@@ -23,6 +24,7 @@ public class StockListener {
             stockService.updateProductQuantity(orderDetails);
         } catch (RuntimeException e) {
             stockService.cancelUpdateQuantity(orderDetails.orderId(),e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
     }
 
