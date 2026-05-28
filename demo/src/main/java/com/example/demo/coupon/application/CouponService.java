@@ -33,8 +33,7 @@ public class CouponService implements CouponServicePort {
             BigDecimal totalAmount
     ) {
 
-        Coupon coupon = couponRepositoryPort.findByCode(couponCode)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon code not found"));
+        Coupon coupon = findCouponByCode(couponCode);
         List<CouponUsage> usageHistory = couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId());
 
         ApplyCouponRequest request =
@@ -52,12 +51,12 @@ public class CouponService implements CouponServicePort {
         );
     }
 
+
+
     @Transactional
     @Override
     public void saveCouponUsage(CouponCodeUsage couponCodeUsage) {
-        Integer couponId = couponRepositoryPort.findByCode(couponCodeUsage.couponCode())
-                .orElseThrow(() -> new IllegalArgumentException("Coupon code not found"))
-                .getId();
+        Integer couponId = findCouponByCode(couponCodeUsage.couponCode()).getId();
         CouponUsage couponUsage = new CouponUsage(couponId,couponCodeUsage.orderId(),couponCodeUsage.userId());
         couponUsageRepositoryPort.save(couponUsage);
     }
@@ -66,18 +65,18 @@ public class CouponService implements CouponServicePort {
     private void validateCouponEligibility(Coupon coupon, ApplyCouponRequest request
     ) {
 
-        boolean valid = coupon.getRules()
-                .stream()
-                .allMatch(rule ->
-                        validatorRegistry
-                                .getValidator(rule.getType())
-                                .validate(request, rule.getValue())
-                );
+        boolean valid = coupon.isEligible(couponRule -> validatorRegistry
+                .getValidator(couponRule.getType())
+                .validate(request, couponRule.getValue()));
 
         if (!valid) {
             throw new IllegalStateException(
                     "Coupon conditions are not met."
             );
         }
+    }
+    private Coupon findCouponByCode(String couponCode) {
+        return couponRepositoryPort.findByCode(couponCode)
+                .orElseThrow(() -> new IllegalArgumentException("Coupon code not found"));
     }
 }

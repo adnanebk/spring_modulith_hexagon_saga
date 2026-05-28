@@ -1,8 +1,10 @@
 package com.example.demo.order.infra.adapters.api;
 
+import com.example.demo.common.data.OrderedItem;
 import com.example.demo.order.domain.OrderItem;
 import com.example.demo.order.infra.adapters.mappers.OrderMapper;
 import com.example.demo.order.infra.dto.OrderInputDto;
+import com.example.demo.order.ports.in.OrderRequest;
 import com.example.demo.order.ports.in.OrderServicePort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,8 @@ public class OrderController {
 
     @PostMapping
     public Integer placeOrder(@RequestBody OrderInputDto orderInputDto) {
-        List<OrderItem> orderItems = orderInputDto.items().stream()
-                .map(i -> new OrderItem(i.productId(), i.quantity())).toList();
-        return orderService.placeOrder(orderInputDto.userId(), orderItems,orderInputDto.paymentToken());
+        List<OrderedItem> orderItems = orderInputDto.items().stream()
+                .map(item -> new OrderedItem(item.productId(), item.quantity())).toList();
+        return orderService.placeOrder(new OrderRequest(orderInputDto.userId(), orderItems, orderInputDto.paymentToken()));
     }
 }

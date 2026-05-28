@@ -13,12 +13,25 @@ public class Order {
     private Integer userId;
     private OrderShipping shipping;
     private OrderStatus status;
-    private Integer couponId;
+    private String couponCode;
+
+    public static Order create(Integer userId, List<OrderedItem> orderedItems) {
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setItems(orderedItems);
+        order.setStatus(OrderStatus.PENDING);
+        order.calculateTotalPrice();
+        return order;
+    }
 
     public void calculateTotalPrice() {
         this.totalPrice = this.items.stream()
                 .map(item->item.price().multiply(BigDecimal.valueOf(item.quantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public void applyDiscount(BigDecimal amountAfterDiscount, String couponCode) {
+        this.totalWithDiscount = amountAfterDiscount;
+        this.couponCode = couponCode;
     }
     public OrderStatus getStatus() {
         return status;
@@ -72,11 +85,13 @@ public class Order {
         this.totalWithDiscount = totalWithDiscount;
     }
 
-    public Integer getCouponId() {
-        return couponId;
+    public String getCouponCode() {
+        return couponCode;
     }
 
-    public void setCouponId(Integer couponId) {
-        this.couponId = couponId;
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
+
+
 }

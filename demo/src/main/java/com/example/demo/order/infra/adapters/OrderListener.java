@@ -27,9 +27,7 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderShippedEvent event){
-        orderService.updateStatus(event.orderDetails().orderId(), OrderStatus.COMPLETED);
-        if(StringUtils.hasText(event.orderDetails().couponCode()))
-            orderService.saveCouponUsage(event.orderDetails().orderId(), event.orderDetails().couponCode(), event.orderDetails().userId());
+        orderService.completeOrder(event.orderDetails().orderId(),event.orderDetails().userId());
     }
 
 

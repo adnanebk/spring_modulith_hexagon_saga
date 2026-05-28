@@ -1,5 +1,6 @@
 package com.example.demo.order;
 
+import com.example.demo.common.data.OrderedItem;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderShippedEvent;
 import com.example.demo.coupon.domain.DiscountType;
@@ -8,10 +9,10 @@ import com.example.demo.coupon.infra.adapters.repo.coupon.CouponSpringRepo;
 import com.example.demo.coupon.infra.entities.CouponEntity;
 import com.example.demo.coupon.infra.entities.CouponRuleEntity;
 import com.example.demo.order.application.OrderService;
-import com.example.demo.order.domain.OrderItem;
 import com.example.demo.order.domain.OrderStatus;
 import com.example.demo.order.infra.adapters.repo.order.OrderSpringRepo;
 import com.example.demo.order.infra.entities.OrderEntity;
+import com.example.demo.order.ports.in.OrderRequest;
 import com.example.demo.stock.infra.adapters.repo.ProductSpringRepo;
 import com.example.demo.stock.infra.entities.ProductEntity;
 import org.junit.jupiter.api.Assertions;
@@ -54,10 +55,10 @@ class OrderServiceTest {
 
     @Test
     public void shouldPlaceOrderSuccess(Scenario scenario) {
-        List<OrderItem> orderItems = createOrderItems();
+        List<OrderedItem> orderItems = createOrderItems();
         Integer userId = 11;
 
-        scenario.stimulate(()->orderService.placeOrder(userId,orderItems,"p"))
+        scenario.stimulate(()->orderService.placeOrder(new OrderRequest(userId, orderItems, "token")))
                 .andWaitForEventOfType(OrderShippedEvent.class)
                 .toArriveAndVerify(((e,orderId)->{
                     var savedProducts = productSpringRepo.findAll();
@@ -72,7 +73,7 @@ class OrderServiceTest {
 
     @Test
     public void shouldPlaceOrderWithCouponSuccess(Scenario scenario) {
-        List<OrderItem> orderItems = createOrderItems();
+        List<OrderedItem> orderItems = createOrderItems();
         CouponEntity coupon = new CouponEntity();
         String couponCode = "p";
         coupon.setCode(couponCode);
@@ -84,7 +85,7 @@ class OrderServiceTest {
         Integer userId = 11;
         couponSpringRepo.save(coupon);
 
-        scenario.stimulate(()->orderService.placeOrder(userId,orderItems,"token",couponCode))
+        scenario.stimulate(()->orderService.placeOrder(new OrderRequest(userId, orderItems, "token", couponCode)))
                 .andWaitForEventOfType(OrderShippedEvent.class)
                 .toArriveAndVerify(((e,orderId)->{
                     var savedProducts = productSpringRepo.findAll();
@@ -95,6 +96,7 @@ class OrderServiceTest {
                     Assertions.assertEquals(OrderStatus.COMPLETED, savedOrder.get().getStatus());
                     Assertions.assertEquals(21, savedOrder.get().getTotalPrice().longValue());
                     Assertions.assertEquals(19, savedOrder.get().getTotalWithDiscount().longValue());
+                    Assertions.assertEquals(couponCode, savedOrder.get().getCouponCode());
                 }));
 
     }
@@ -103,9 +105,9 @@ class OrderServiceTest {
 
     @Test
     public void shouldCancelOrderOnPaymentFailure(Scenario scenario) {
-        List<OrderItem> orderItems = createOrderItems();
+        List<OrderedItem> orderItems = createOrderItems();
         Integer userId = 11;
-        scenario.stimulate(() -> orderService.placeOrder(userId, orderItems, ""))
+        scenario.stimulate(() -> orderService.placeOrder(new OrderRequest(userId, orderItems, "")))
                 .andWaitForEventOfType(OrderCanceledEvent.class)
                 .toArriveAndVerify((e, orderId) -> {
                     var savedProducts = productSpringRepo.findAll();
@@ -118,11 +120,11 @@ class OrderServiceTest {
     }
 
 
-    private List<OrderItem> createOrderItems() {
+    private List<OrderedItem> createOrderItems() {
         ProductEntity product1 = new ProductEntity("p1", BigDecimal.valueOf(5),10);
         ProductEntity product2= new ProductEntity("p2",BigDecimal.valueOf(2),10);
         return productSpringRepo.saveAll(List.of(product1,product2))
-                .stream().map(productEntity -> new OrderItem(productEntity.getId(),3)).toList();
+                .stream().map(productEntity -> new OrderedItem(productEntity.getId(),3)).toList();
     }
 
 

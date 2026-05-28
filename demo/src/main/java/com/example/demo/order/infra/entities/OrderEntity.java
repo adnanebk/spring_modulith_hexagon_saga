@@ -27,7 +27,7 @@ public class OrderEntity {
 
     private OrderStatus status;
 
-    private Integer couponId;
+    private String couponCode;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -102,11 +102,11 @@ public class OrderEntity {
         this.totalWithDiscount = totalWithDiscount;
     }
 
-    public Integer getCouponId() {
-        return couponId;
+    public String getCouponCode() {
+        return couponCode;
     }
 
-    public void setCouponId(Integer couponId) {
-        this.couponId = couponId;
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

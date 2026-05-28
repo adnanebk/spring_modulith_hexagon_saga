@@ -7,6 +7,8 @@ import com.example.demo.order.infra.entities.OrderEntity;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public class OrderRepo implements OrderRepoPort {
@@ -29,6 +31,11 @@ public class OrderRepo implements OrderRepoPort {
     @Override
     public void updateStatus(Integer id, OrderStatus status) {
         orderSpringRepo.updateStatus(id, status);
+    }
+
+    @Override
+    public Optional<String> findCouponCodeById(Integer id) {
+        return orderSpringRepo.findCouponCodeById(id);
     }
 
 
