@@ -7,6 +7,7 @@ import com.example.demo.common.data.StockedProduct;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.common.data.CouponCodeUsage;
+import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.order.domain.Order;
 import com.example.demo.order.domain.OrderStatus;
 import com.example.demo.order.ports.in.OrderRequest;
@@ -79,7 +80,7 @@ public class OrderService implements OrderServicePort {
     }
     private void validate(OrderRequest orderRequest) {
         if (CollectionUtils.isEmpty(orderRequest.orderItems()))
-            throw new IllegalArgumentException("Order must contain at least one item");
+            throw new BusinessException("Order must contain at least one item");
     }
 
     private void applyDiscountIfExist(String couponCode, Order order) {
@@ -107,7 +108,7 @@ public class OrderService implements OrderServicePort {
 
     private StockedProduct searchProductInStock(Map<Integer,StockedProduct> productsMap, OrderedItem item) {
         return   Optional.ofNullable(productsMap.get(item.productId()))
-                .orElseThrow(() -> new IllegalArgumentException("Product with id %s is not in stock".formatted(item.productId())));
+                .orElseThrow(() -> new BusinessException("Product with id %s is not in stock".formatted(item.productId())));
     }
 
 

@@ -5,6 +5,8 @@ import com.example.demo.common.data.OrderedItem;
 import com.example.demo.common.data.StockedProduct;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.events.OrderStockFailedEvent;
+import com.example.demo.common.exceptions.BusinessException;
+import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.stock.domain.Product;
 import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import com.example.demo.stock.ports.in.ProductRepoPort;
@@ -34,7 +36,7 @@ public class StockService implements StockServicePort {
         List<Product> products = getCorrespondingProducts(items);
             for (OrderedItem item : items) {
                 Product product = getCorrespondingProduct(item, products)
-                        .orElseThrow(() -> new IllegalStateException("Product not found: " + item.productId()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + item.productId()));
                 validate(item, product);
                 product.setAmountInStock(product.getAmountInStock() - item.quantity());
             }
@@ -73,7 +75,7 @@ public class StockService implements StockServicePort {
 
     private void validate(OrderedItem item, Product product) {
         if (product.getAmountInStock() < item.quantity()) {
-            throw new NotEnoughStockException("Not enough stock for product " + item.productId());
+            throw new BusinessException("Not enough stock for product " + item.productId());
         }
     }
 

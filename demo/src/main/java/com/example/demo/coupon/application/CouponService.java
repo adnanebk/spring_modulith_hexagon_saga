@@ -1,6 +1,8 @@
 package com.example.demo.coupon.application;
 
 import com.example.demo.common.data.CouponCodeUsage;
+import com.example.demo.common.exceptions.BusinessException;
+import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.coupon.domain.*;
 import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
@@ -70,13 +72,13 @@ public class CouponService implements CouponServicePort {
                 .validate(request, couponRule.getValue()));
 
         if (!valid) {
-            throw new IllegalStateException(
+            throw new BusinessException(
                     "Coupon conditions are not met."
             );
         }
     }
     private Coupon findCouponByCode(String couponCode) {
         return couponRepositoryPort.findByCode(couponCode)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon code not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon code not found"));
     }
 }
