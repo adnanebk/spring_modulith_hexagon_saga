@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ProductClientPort {
 
-    List<StockedProduct> getProducts(List<Integer> productIds);
+    List<StockedProduct> getProductsByIds(List<Integer> productIds);
 }

@@ -5,7 +5,7 @@ import com.example.demo.common.data.CouponCodeUsage;
 
 import java.math.BigDecimal;
 
-public interface DiscountRepoClient {
+public interface DiscountClientPort {
 
      void saveCouponUsage(CouponCodeUsage couponCodeUsage);
 

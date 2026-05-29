@@ -17,7 +17,7 @@ public class ProductClient implements ProductClientPort {
     }
 
     @Override
-    public List<StockedProduct> getProducts(List<Integer> productIds) {
+    public List<StockedProduct> getProductsByIds(List<Integer> productIds) {
         return stockServicePort.getProducts(productIds);
     }
 }
