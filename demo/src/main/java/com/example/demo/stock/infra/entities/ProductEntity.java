@@ -1,9 +1,6 @@
 package com.example.demo.stock.infra.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
@@ -16,6 +13,9 @@ public class ProductEntity {
     private String name;
     private BigDecimal price;
     private int amountInStock;
+
+    @Version
+    private Integer version;
 
     public ProductEntity( String name, BigDecimal price, int amountInStock) {
         this.name = name;
