@@ -1,6 +1,8 @@
 package com.example.demo.payment.domain;
 
 
+import com.example.demo.common.data.PaymentType;
+
 public class Payment {
     private Integer id;
     private PaymentType type;

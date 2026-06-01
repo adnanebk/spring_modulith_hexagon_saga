@@ -1,6 +1,6 @@
 package com.example.demo.coupon.ports;
 
-import com.example.demo.coupon.domain.AppliedCouponSummary;
+import com.example.demo.common.data.AppliedCouponSummary;
 import com.example.demo.common.data.CouponCodeUsage;
 
 import java.math.BigDecimal;

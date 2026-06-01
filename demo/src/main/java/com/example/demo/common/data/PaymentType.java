@@ -1,4 +1,4 @@
-package com.example.demo.payment.domain;
+package com.example.demo.common.data;
 
 public enum PaymentType {
     CASH,

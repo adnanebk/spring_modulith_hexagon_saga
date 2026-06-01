@@ -1,6 +1,6 @@
 package com.example.demo.order.domain;
 
-import com.example.demo.common.enums.PaymentType;
+import com.example.demo.common.data.PaymentType;
 
 public class OrderPayment {
     private PaymentType type;

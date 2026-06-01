@@ -1,5 +1,5 @@
 @ApplicationModule(displayName = "payment.domain",
-        type = ApplicationModule.Type.OPEN,allowedDependencies = "payment"
+        type = ApplicationModule.Type.OPEN,allowedDependencies = {"payment","common"}
 )
 package com.example.demo.payment.domain;
 

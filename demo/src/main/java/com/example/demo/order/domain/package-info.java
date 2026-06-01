@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(displayName = "order.domain",
-        type = ApplicationModule.Type.OPEN,allowedDependencies = {"common.enums","order","common"}
+        type = ApplicationModule.Type.OPEN,allowedDependencies = {"order","common"}
 )
 package com.example.demo.order.domain;
 

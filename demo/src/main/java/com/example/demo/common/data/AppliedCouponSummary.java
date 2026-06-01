@@ -1,4 +1,6 @@
-package com.example.demo.coupon.domain;
+package com.example.demo.common.data;
+
+import com.example.demo.coupon.domain.DiscountType;
 
 import java.math.BigDecimal;
 
