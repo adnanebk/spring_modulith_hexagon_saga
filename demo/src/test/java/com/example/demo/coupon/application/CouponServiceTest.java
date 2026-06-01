@@ -1,7 +1,9 @@
 package com.example.demo.coupon.application;
 
+import com.example.demo.common.exceptions.BusinessException;
+import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.coupon.domain.*;
-import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
+import com.example.demo.coupon.domain.validators.CouponRuleValidator;
 import com.example.demo.coupon.domain.validators.MinAmountValidator;
 import com.example.demo.coupon.domain.validators.OncerPerUserValidator;
 import com.example.demo.coupon.domain.validators.expirationValidator;
@@ -35,7 +37,7 @@ class CouponServiceTest {
 
     @BeforeEach
     void setUp() {
-        CouponRuleValidatorRegistry validatorRegistry = new CouponRuleValidatorRegistry(List.of(
+        CouponRuleValidator validatorRegistry = new CouponRuleValidator(List.of(
                 new MinAmountValidator(),
                 new OncerPerUserValidator(),
                 new expirationValidator(Clock.systemUTC())
@@ -92,8 +94,8 @@ class CouponServiceTest {
 
         when(couponRepositoryPort.findByCode(couponCode)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
                 () -> couponService.applyCoupon(userId, couponCode, totalAmount)
         );
 
@@ -113,8 +115,8 @@ class CouponServiceTest {
         when(couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId()))
                 .thenReturn(List.of(couponUsage));
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        BusinessException exception = assertThrows(
+                BusinessException.class,
                 () -> couponService.applyCoupon(userId, couponCode, totalAmount)
         );
 

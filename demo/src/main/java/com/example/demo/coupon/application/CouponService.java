@@ -4,7 +4,7 @@ import com.example.demo.common.data.CouponCodeUsage;
 import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.coupon.domain.*;
-import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
+import com.example.demo.coupon.domain.validators.CouponRuleValidator;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
 import com.example.demo.coupon.ports.CouponServicePort;
 import com.example.demo.coupon.ports.CouponUsageRepositoryPort;
@@ -19,12 +19,12 @@ import java.util.List;
 public class CouponService implements CouponServicePort {
 
     private final CouponRepositoryPort couponRepositoryPort;
-    private final CouponRuleValidatorRegistry validatorRegistry;
+    private final CouponRuleValidator couponValidator;
     private final CouponUsageRepositoryPort couponUsageRepositoryPort;
 
-    public CouponService(CouponRepositoryPort couponRepositoryPort, CouponRuleValidatorRegistry validatorRegistry, CouponUsageRepositoryPort couponUsageRepositoryPort) {
+    public CouponService(CouponRepositoryPort couponRepositoryPort, CouponRuleValidator couponValidator, CouponUsageRepositoryPort couponUsageRepositoryPort) {
         this.couponRepositoryPort = couponRepositoryPort;
-        this.validatorRegistry = validatorRegistry;
+        this.couponValidator = couponValidator;
         this.couponUsageRepositoryPort = couponUsageRepositoryPort;
     }
 
@@ -38,10 +38,9 @@ public class CouponService implements CouponServicePort {
         Coupon coupon = findCouponByCode(couponCode);
         List<CouponUsage> usageHistory = couponUsageRepositoryPort.findAllByUserIdAndCouponId(userId, coupon.getId());
 
-        ApplyCouponRequest request =
-                new ApplyCouponRequest(coupon, usageHistory, totalAmount);
 
-        validateCouponEligibility(coupon, request);
+
+        validateCouponEligibility(coupon, usageHistory, totalAmount);
 
         BigDecimal finalAmount =
                 coupon.calculateFinalAmount(totalAmount);
@@ -64,12 +63,9 @@ public class CouponService implements CouponServicePort {
     }
 
 
-    private void validateCouponEligibility(Coupon coupon, ApplyCouponRequest request
+    private void validateCouponEligibility(Coupon coupon, List<CouponUsage> usageHistory, BigDecimal totalAmount
     ) {
-
-        boolean valid = coupon.isEligible(couponRule -> validatorRegistry
-                .getValidator(couponRule.getType())
-                .validate(request, couponRule.getValue()));
+        boolean valid = coupon.isEligible(usageHistory,totalAmount, couponValidator);
 
         if (!valid) {
             throw new BusinessException(

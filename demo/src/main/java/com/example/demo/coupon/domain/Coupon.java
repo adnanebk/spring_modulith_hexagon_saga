@@ -1,10 +1,11 @@
 package com.example.demo.coupon.domain;
 
 
+import com.example.demo.coupon.domain.validators.CouponRuleValidator;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class Coupon {
     private Integer id;
@@ -22,10 +23,12 @@ public class Coupon {
         return discountType.makeDiscount(totalAmount, discount);
     }
 
- public boolean isEligible(Predicate<CouponRule> validator){
-     return  rules.stream()
-             .allMatch(validator);
- }
+ public boolean isEligible(List<CouponUsage> usageHistory, BigDecimal totalAmount, CouponRuleValidator couponValidator){
+     ApplyCouponRequest request =
+             new ApplyCouponRequest(this, usageHistory, totalAmount);
+        return  rules.stream()
+                .allMatch(rule -> couponValidator.validate(rule,request));
+    }
     public String getCode() {
         return code;
     }
