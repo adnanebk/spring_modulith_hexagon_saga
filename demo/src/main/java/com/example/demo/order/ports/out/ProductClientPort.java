@@ -1,10 +1,10 @@
 package com.example.demo.order.ports.out;
 
-import com.example.demo.common.data.StockedProduct;
+import com.example.demo.common.data.ProductInStock;
 
 import java.util.List;
 
 public interface ProductClientPort {
 
-    List<StockedProduct> getProductsByIds(List<Integer> productIds);
+    List<ProductInStock> getProductsByIds(List<Integer> productIds);
 }

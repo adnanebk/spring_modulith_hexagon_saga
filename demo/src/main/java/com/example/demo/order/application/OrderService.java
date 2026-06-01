@@ -3,7 +3,7 @@ package com.example.demo.order.application;
 
 import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.common.data.StockedProduct;
+import com.example.demo.common.data.ProductInStock;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.common.data.CouponCodeUsage;
@@ -47,7 +47,7 @@ public class OrderService implements OrderServicePort {
     public Integer placeOrder(OrderRequest orderRequest) {
         validate(orderRequest);
 
-        List<StockedProduct> productsInStock = getProductsInStock(orderRequest.orderItems());
+        List<ProductInStock> productsInStock = getProductsInStock(orderRequest.orderItems());
 
         List<OrderedItem> orderItems = addPriceToItems(orderRequest.orderItems(), productsInStock);
 
@@ -79,6 +79,7 @@ public class OrderService implements OrderServicePort {
         });
     }
     private void validate(OrderRequest orderRequest) {
+        // validate user id existence
         if (CollectionUtils.isEmpty(orderRequest.orderItems()))
             throw new BusinessException("Order must contain at least one item");
     }
@@ -90,25 +91,28 @@ public class OrderService implements OrderServicePort {
         }
     }
 
-    private List<StockedProduct> getProductsInStock(List<OrderedItem> orderItems) {
+    private List<ProductInStock> getProductsInStock(List<OrderedItem> orderItems) {
         Map<Integer, Integer> productQuantityMap = orderItems.stream()
                 .collect(Collectors.toMap(OrderedItem::productId, OrderedItem::quantity,Integer::sum));
         return productClientPort.getProductsByIds(new ArrayList<>(productQuantityMap.keySet()));
     }
 
-    private  List<OrderedItem> addPriceToItems(List<OrderedItem> orderItems, List<StockedProduct> productsInStock) {
-        Map<Integer,StockedProduct> productsMap = productsInStock.stream()
-                .collect(Collectors.toMap(StockedProduct::productId, Function.identity()));
+    private  List<OrderedItem> addPriceToItems(List<OrderedItem> orderItems, List<ProductInStock> productsInStock) {
+        Map<Integer, ProductInStock> productsMap = productsInStock.stream()
+                .collect(Collectors.toMap(ProductInStock::productId, Function.identity()));
         return orderItems.stream().map(item -> {
-            StockedProduct product = searchProductInStock(productsMap, item);
+            ProductInStock product = searchProductInStock(productsMap, item);
             return item.withPrice(product.price());
         }).toList();
     }
 
 
-    private StockedProduct searchProductInStock(Map<Integer,StockedProduct> productsMap, OrderedItem item) {
-        return   Optional.ofNullable(productsMap.get(item.productId()))
+    private ProductInStock searchProductInStock(Map<Integer, ProductInStock> productsMap, OrderedItem item) {
+        ProductInStock productInStock =    Optional.ofNullable(productsMap.get(item.productId()))
                 .orElseThrow(() -> new BusinessException("Product with id %s is not in stock".formatted(item.productId())));
+        if (productInStock.quantity() < item.quantity())
+            throw new BusinessException("Product with id %s has not enough quantity ".formatted(item.productId()));
+        return productInStock;
     }
 
 

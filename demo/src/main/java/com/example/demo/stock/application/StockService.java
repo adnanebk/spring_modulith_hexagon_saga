@@ -2,13 +2,12 @@ package com.example.demo.stock.application;
 
 import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.common.data.StockedProduct;
+import com.example.demo.common.data.ProductInStock;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.events.OrderStockFailedEvent;
 import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.stock.domain.Product;
-import com.example.demo.stock.domain.exeptions.NotEnoughStockException;
 import com.example.demo.stock.ports.in.ProductRepoPort;
 import com.example.demo.stock.ports.in.StockServicePort;
 import org.springframework.context.ApplicationEventPublisher;
@@ -69,8 +68,8 @@ public class StockService implements StockServicePort {
     }
 
     @Override
-    public List<StockedProduct> getProducts(List<Integer> productIds) {
-        return productRepoPort.getAllByIds(productIds).stream().map(p -> new StockedProduct(p.getId(), p.getPrice(), p.getAmountInStock())).toList();
+    public List<ProductInStock> getProducts(List<Integer> productIds) {
+        return productRepoPort.getAllByIds(productIds).stream().map(p -> new ProductInStock(p.getId(), p.getPrice(), p.getAmountInStock())).toList();
     }
 
     private void validate(OrderedItem item, Product product) {

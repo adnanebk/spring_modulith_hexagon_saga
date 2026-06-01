@@ -2,7 +2,7 @@ package com.example.demo.order.application;
 
 
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.common.data.StockedProduct;
+import com.example.demo.common.data.ProductInStock;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.order.ports.in.OrderRequest;
 import com.example.demo.order.ports.out.DiscountClientPort;
@@ -12,7 +12,6 @@ import com.example.demo.order.domain.Order;
 import com.example.demo.order.domain.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.test.ApplicationModuleTest;
 import org.springframework.modulith.test.Scenario;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -54,8 +53,8 @@ class OrderServiceTest {
 
         when(productClientPort.getProductsByIds(anyList()))
                 .thenReturn(List.of(
-                        new StockedProduct(2, BigDecimal.valueOf(15), 10),
-                        new StockedProduct(3, BigDecimal.valueOf(10), 5)
+                        new ProductInStock(2, BigDecimal.valueOf(15), 10),
+                        new ProductInStock(3, BigDecimal.valueOf(10), 5)
                 ));
         when(orderRepoPort.create(any())).thenReturn(1);
 
@@ -89,8 +88,8 @@ class OrderServiceTest {
 
         when(productClientPort.getProductsByIds(anyList()))
                 .thenReturn(List.of(
-                        new StockedProduct(2, BigDecimal.valueOf(15), 10),
-                        new StockedProduct(3, BigDecimal.valueOf(10), 5)
+                        new ProductInStock(2, BigDecimal.valueOf(15), 10),
+                        new ProductInStock(3, BigDecimal.valueOf(10), 5)
                 ));
         when(orderRepoPort.create(any())).thenReturn(1);
         when(discountClientPort.discount(eq(userId), eq(couponCode), any()))
