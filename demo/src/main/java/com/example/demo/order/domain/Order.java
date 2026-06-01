@@ -9,7 +9,7 @@ public class Order {
 
     private List<OrderedItem> items;
     private BigDecimal totalPrice;
-    private BigDecimal totalWithDiscount;
+    private BigDecimal totalBeforeDiscount;
     private Integer userId;
     private OrderShipping shipping;
     private OrderStatus status;
@@ -30,7 +30,8 @@ public class Order {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
     public void applyDiscount(BigDecimal amountAfterDiscount, String couponCode) {
-        this.totalWithDiscount = amountAfterDiscount;
+        this.totalBeforeDiscount = this.totalPrice;
+        this.totalPrice = amountAfterDiscount;
         this.couponCode = couponCode;
     }
     public OrderStatus getStatus() {
@@ -77,12 +78,12 @@ public class Order {
         this.userId = userId;
     }
 
-    public BigDecimal getTotalWithDiscount() {
-        return totalWithDiscount;
+    public BigDecimal getTotalBeforeDiscount() {
+        return totalBeforeDiscount;
     }
 
-    public void setTotalWithDiscount(BigDecimal totalWithDiscount) {
-        this.totalWithDiscount = totalWithDiscount;
+    public void setTotalBeforeDiscount(BigDecimal totalBeforeDiscount) {
+        this.totalBeforeDiscount = totalBeforeDiscount;
     }
 
     public String getCouponCode() {

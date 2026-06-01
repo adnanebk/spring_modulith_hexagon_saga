@@ -63,7 +63,7 @@ public class OrderService implements OrderServicePort {
     }
 
 
-    @Transactional
+    //@Transactional
     @Override
     public void cancelOrder(Integer orderId, String message) {
         orderRepoPort.updateStatus(orderId, OrderStatus.CANCELLED);
