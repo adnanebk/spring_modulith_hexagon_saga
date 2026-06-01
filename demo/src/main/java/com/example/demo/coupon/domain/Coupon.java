@@ -1,9 +1,7 @@
 package com.example.demo.coupon.domain;
 
-import com.example.demo.coupon.domain.validators.CouponRuleValidatorRegistry;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
@@ -21,14 +19,7 @@ public class Coupon {
 
     public BigDecimal calculateFinalAmount(BigDecimal totalAmount) {
         BigDecimal discount = BigDecimal.valueOf(this.discount);
-
-        if (this.discountType == DiscountType.FIXED) {
-            return totalAmount.subtract(discount).max(BigDecimal.ZERO);
-        } else {
-            BigDecimal discountAmount = totalAmount.multiply(discount)
-                    .divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
-            return totalAmount.subtract(discountAmount);
-        }
+        return discountType.makeDiscount(totalAmount, discount);
     }
 
  public boolean isEligible(Predicate<CouponRule> validator){
