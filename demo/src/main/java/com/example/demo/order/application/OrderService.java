@@ -52,7 +52,12 @@ public class OrderService implements OrderServicePort {
 
         List<ProductInStock> productsInStock = getProductsInStock(orderRequest.orderItems());
 
-        List<OrderedItem> orderItems = addPriceToItems(orderRequest.orderItems(), productsInStock);
+        Map<Integer, ProductInStock> productsInStockMap = productsInStock.stream()
+                .collect(Collectors.toMap(ProductInStock::productId, Function.identity()));
+
+        validateItemsAvailability(productsInStockMap, orderRequest.orderItems());
+
+        List<OrderedItem> orderItems = addPriceToItems(orderRequest.orderItems(), productsInStockMap);
 
         Order order = Order.create(orderRequest.userId(), orderItems);
 
@@ -66,7 +71,7 @@ public class OrderService implements OrderServicePort {
     }
 
 
-    //@Transactional
+    @Transactional
     @Override
     public void cancelOrder(Integer orderId, String message) {
         orderRepoPort.updateStatus(orderId, OrderStatus.CANCELLED);
@@ -82,9 +87,12 @@ public class OrderService implements OrderServicePort {
         });
     }
     private void validate(OrderRequest orderRequest) {
-        // validate user id existence
+
         if (CollectionUtils.isEmpty(orderRequest.orderItems()))
             throw new BusinessException("Order must contain at least one item");
+        // check of duplicate items
+        if (orderRequest.orderItems().stream().map(OrderedItem::productId).distinct().count() != orderRequest.orderItems().size())
+            throw new BusinessException("Order must contains unique items");
     }
 
     private void applyDiscountIfExist(String couponCode, Order order) {
@@ -100,22 +108,18 @@ public class OrderService implements OrderServicePort {
         return productClientPort.getProductsByIds(new ArrayList<>(productQuantityMap.keySet()));
     }
 
-    private  List<OrderedItem> addPriceToItems(List<OrderedItem> orderItems, List<ProductInStock> productsInStock) {
-        Map<Integer, ProductInStock> productsMap = productsInStock.stream()
-                .collect(Collectors.toMap(ProductInStock::productId, Function.identity()));
-        return orderItems.stream().map(item -> {
-            ProductInStock product = searchProductInStock(productsMap, item);
-            return item.withPrice(product.price());
-        }).toList();
+    private  List<OrderedItem> addPriceToItems(List<OrderedItem> orderItems,  Map<Integer, ProductInStock> productsMap) {
+        return orderItems.stream().map(item ->
+                item.withPrice(productsMap.get(item.productId()).price())).toList();
     }
 
 
-    private ProductInStock searchProductInStock(Map<Integer, ProductInStock> productsMap, OrderedItem item) {
-        ProductInStock productInStock =    Optional.ofNullable(productsMap.get(item.productId()))
-                .orElseThrow(() -> new BusinessException("Product with id %s is not in stock".formatted(item.productId())));
-        if (productInStock.quantity() < item.quantity())
-            throw new BusinessException("Product with id %s has not enough quantity ".formatted(item.productId()));
-        return productInStock;
+    private void validateItemsAvailability(Map<Integer, ProductInStock> productsMap, List<OrderedItem> orderItems) {
+        Optional<OrderedItem> searchedItem = orderItems.stream().filter(item -> item.quantity() >
+                Optional.ofNullable(productsMap.get(item.productId()))
+                                .map(ProductInStock::quantity).orElse(0)).findFirst();
+        if(searchedItem.isPresent())
+            throw new BusinessException("Product " + searchedItem.get().productId() + " is not in stock");
     }
 
 
