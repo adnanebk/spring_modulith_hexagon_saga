@@ -1,10 +1,11 @@
 package com.example.demo.coupon.application;
 
-import com.example.demo.common.data.AppliedCouponSummary;
-import com.example.demo.common.data.CouponCodeUsage;
 import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.common.exceptions.ResourceNotFoundException;
-import com.example.demo.coupon.domain.*;
+import com.example.demo.coupon.domain.AppliedCouponSummary;
+import com.example.demo.coupon.domain.Coupon;
+import com.example.demo.coupon.domain.CouponCodeUsage;
+import com.example.demo.coupon.domain.CouponUsage;
 import com.example.demo.coupon.domain.validators.CouponRuleValidator;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
 import com.example.demo.coupon.ports.CouponServicePort;

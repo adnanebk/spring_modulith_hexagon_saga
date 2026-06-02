@@ -1,7 +1,7 @@
 package com.example.demo.order.ports.out;
 
 
-import com.example.demo.common.data.CouponCodeUsage;
+import com.example.demo.coupon.domain.CouponCodeUsage;
 
 import java.math.BigDecimal;
 

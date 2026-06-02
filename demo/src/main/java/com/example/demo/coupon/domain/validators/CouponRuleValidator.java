@@ -2,11 +2,9 @@ package com.example.demo.coupon.domain.validators;
 
 import com.example.demo.coupon.domain.ApplyCouponRequest;
 import com.example.demo.coupon.domain.CouponRule;
-import com.example.demo.coupon.domain.CouponUsage;
 import com.example.demo.coupon.domain.RuleType;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;

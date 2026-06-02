@@ -1,6 +1,6 @@
 package com.example.demo.order.ports.out;
 
-import com.example.demo.common.data.ProductInStock;
+import com.example.demo.stock.domain.ProductInStock;
 
 import java.util.List;
 

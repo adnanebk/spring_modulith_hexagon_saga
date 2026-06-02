@@ -2,12 +2,12 @@ package com.example.demo.stock.application;
 
 import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.common.data.ProductInStock;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.events.OrderStockFailedEvent;
 import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.stock.domain.Product;
+import com.example.demo.stock.domain.ProductInStock;
 import com.example.demo.stock.ports.in.ProductRepoPort;
 import com.example.demo.stock.ports.in.StockServicePort;
 import org.springframework.context.ApplicationEventPublisher;

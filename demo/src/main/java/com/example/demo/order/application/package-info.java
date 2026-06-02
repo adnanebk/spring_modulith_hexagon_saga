@@ -1,4 +1,4 @@
 @org.springframework.modulith.ApplicationModule(displayName = "order.application",
-        allowedDependencies = {"common","order.domain","order.ports"}
+        allowedDependencies = {"common","order.domain","order.ports","stock::public-api","coupon::public-api"}
 )
 package com.example.demo.order.application;

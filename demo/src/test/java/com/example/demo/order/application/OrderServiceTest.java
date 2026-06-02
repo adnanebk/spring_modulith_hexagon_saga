@@ -2,7 +2,7 @@ package com.example.demo.order.application;
 
 
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.common.data.ProductInStock;
+import com.example.demo.stock.domain.ProductInStock;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.order.ports.in.OrderRequest;
 import com.example.demo.order.ports.out.DiscountClientPort;

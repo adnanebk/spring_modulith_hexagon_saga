@@ -1,6 +1,6 @@
 package com.example.demo.coupon.application;
 
-import com.example.demo.common.data.AppliedCouponSummary;
+import com.example.demo.coupon.domain.AppliedCouponSummary;
 import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.coupon.domain.*;

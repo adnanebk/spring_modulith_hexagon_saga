@@ -1,6 +1,6 @@
 package com.example.demo.order.infra.adapters.clients;
 
-import com.example.demo.common.data.CouponCodeUsage;
+import com.example.demo.coupon.domain.CouponCodeUsage;
 import com.example.demo.coupon.ports.CouponServicePort;
 import com.example.demo.order.ports.out.DiscountClientPort;
 import org.springframework.stereotype.Component;

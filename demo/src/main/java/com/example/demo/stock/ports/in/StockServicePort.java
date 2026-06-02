@@ -1,7 +1,7 @@
 package com.example.demo.stock.ports.in;
 
 import com.example.demo.common.data.OrderDetails;
-import com.example.demo.common.data.ProductInStock;
+import com.example.demo.stock.domain.ProductInStock;
 
 import java.util.List;
 

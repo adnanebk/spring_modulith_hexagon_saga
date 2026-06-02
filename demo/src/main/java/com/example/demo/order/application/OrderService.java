@@ -3,11 +3,10 @@ package com.example.demo.order.application;
 
 import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.common.data.ProductInStock;
 import com.example.demo.common.events.OrderCanceledEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
-import com.example.demo.common.data.CouponCodeUsage;
 import com.example.demo.common.exceptions.BusinessException;
+import com.example.demo.coupon.domain.CouponCodeUsage;
 import com.example.demo.order.domain.Order;
 import com.example.demo.order.domain.OrderStatus;
 import com.example.demo.order.ports.in.OrderRequest;
@@ -15,6 +14,7 @@ import com.example.demo.order.ports.in.OrderServicePort;
 import com.example.demo.order.ports.out.DiscountClientPort;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import com.example.demo.order.ports.out.ProductClientPort;
+import com.example.demo.stock.domain.ProductInStock;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

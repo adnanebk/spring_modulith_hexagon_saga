@@ -1,7 +1,7 @@
 package com.example.demo.order.infra.adapters.clients;
 
-import com.example.demo.common.data.ProductInStock;
 import com.example.demo.order.ports.out.ProductClientPort;
+import com.example.demo.stock.domain.ProductInStock;
 import com.example.demo.stock.ports.in.StockServicePort;
 import org.springframework.stereotype.Service;
 

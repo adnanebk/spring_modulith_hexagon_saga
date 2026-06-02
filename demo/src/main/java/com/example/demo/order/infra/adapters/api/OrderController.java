@@ -1,7 +1,6 @@
 package com.example.demo.order.infra.adapters.api;
 
 import com.example.demo.common.data.OrderedItem;
-import com.example.demo.order.domain.OrderItem;
 import com.example.demo.order.infra.adapters.mappers.OrderMapper;
 import com.example.demo.order.infra.dto.OrderInputDto;
 import com.example.demo.order.ports.in.OrderRequest;
