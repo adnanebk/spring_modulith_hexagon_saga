@@ -1,9 +1,8 @@
 package com.example.demo.order;
 
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import org.springframework.boot.test.context.SpringBootTest;
 
-@DataJpaTest
 class ItemsStockServiceTest {
 
 /*

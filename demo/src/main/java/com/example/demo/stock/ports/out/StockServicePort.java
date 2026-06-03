@@ -1,4 +1,4 @@
-package com.example.demo.stock.ports.in;
+package com.example.demo.stock.ports.out;
 
 import com.example.demo.common.data.OrderDetails;
 import com.example.demo.stock.domain.ProductInStock;

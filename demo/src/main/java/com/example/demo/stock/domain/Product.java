@@ -6,9 +6,10 @@ public class Product {
 
     private Integer id;
     private String name;
+    private String category;
+    private String description;
     private BigDecimal price;
     private int amountInStock;
-    private int previousAmountInStock;
 
     public Integer getId() {
         return id;
@@ -34,12 +35,20 @@ public class Product {
         this.amountInStock = amountInStock;
     }
 
-    public int getPreviousAmountInStock() {
-        return previousAmountInStock;
+    public String getCategory() {
+        return category;
     }
 
-    public void setPreviousAmountInStock(int previousAmountInStock) {
-        this.previousAmountInStock = previousAmountInStock;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getPrice() {

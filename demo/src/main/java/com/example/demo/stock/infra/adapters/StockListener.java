@@ -4,7 +4,7 @@ import com.example.demo.common.data.OrderDetails;
 import com.example.demo.common.events.OrderPaymentFailedEvent;
 import com.example.demo.common.events.OrderPlacedEvent;
 import com.example.demo.stock.application.StockService;
-import com.example.demo.stock.ports.in.StockServicePort;
+import com.example.demo.stock.ports.out.StockServicePort;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
