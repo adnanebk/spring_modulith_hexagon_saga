@@ -60,12 +60,12 @@ class OrderServiceTest {
 
         scenario.stimulate(()->orderService.placeOrder(new OrderRequest(userId, orderItems, "token")))
                 .andWaitForEventOfType(OrderPlacedEvent.class)
-                .toArriveAndVerify(((e,orderId)->{
+                .toArriveAndVerify(((e,order)->{
                     assertNotNull(e.orderDetails());
                     assertEquals(userId, e.orderDetails().userId());
                     assertEquals("token", e.orderDetails().paymentToken());
                     assertEquals(2, e.orderDetails().items().size());
-                    assertEquals(orderId, e.orderDetails().orderId());
+                    assertEquals(order.getId(), e.orderDetails().orderId());
                     assertEquals(11, e.orderDetails().userId());
 
                 }));

@@ -14,7 +14,7 @@ public class ProductEntity {
     private String category;
     private String description;
     private BigDecimal price;
-    private int amountInStock;
+    private Integer amountInStock;
 
     @Version
     private Integer version;
@@ -44,11 +44,11 @@ public class ProductEntity {
         this.name = name;
     }
 
-    public int getAmountInStock() {
+    public Integer getAmountInStock() {
         return amountInStock;
     }
 
-    public void setAmountInStock(int amountInStock) {
+    public void setAmountInStock(Integer amountInStock) {
         this.amountInStock = amountInStock;
     }
 
