@@ -36,7 +36,7 @@ public class ProductRepo implements ProductRepoPort {
     public void updateQuantities(Map<Integer,Integer> productsQuantities) {
         var productsEntities = productSpringRepo.findAllById(productsQuantities.keySet());
         for(ProductEntity productEntity:productsEntities){
-            productEntity.setName("cxc");
+            productEntity.setAmountInStock(productsQuantities.get(productEntity.getId()));
         }
         productSpringRepo.saveAll(productsEntities);
     }
