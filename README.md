@@ -6,6 +6,9 @@ A demonstration of a modular monolith architecture using Spring Modulith, implem
 
 This project showcases a modern approach to building modular applications using Spring Modulith with hexagonal architecture (ports and adapters). It implements a Saga pattern to manage distributed transactions across multiple bounded contexts: Order, Stock, Payment, and Shipping.
 
+## Front-end testing
+For testing purposes, i have developed an Angular frontend project available at https://github.com/adnanebk/shopping-page-new-angular
+
 ## Architecture
 
 ### Modular Design
