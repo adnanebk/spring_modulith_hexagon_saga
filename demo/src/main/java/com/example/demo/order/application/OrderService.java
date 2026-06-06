@@ -47,7 +47,7 @@ public class OrderService implements OrderServicePort {
 
     @Transactional
     @Override
-    public Integer placeOrder(OrderRequest orderRequest) {
+    public Order placeOrder(OrderRequest orderRequest) {
         validate(orderRequest);
 
         List<ProductInStock> productsInStock = getProductsInStock(orderRequest.orderItems());
@@ -64,10 +64,10 @@ public class OrderService implements OrderServicePort {
         applyDiscountIfExist(orderRequest.couponCode(), order);
 
         Integer orderId = orderRepoPort.create(order);
-
+        order.setId(orderId);
         OrderDetails orderDetails = new OrderDetails(orderId, orderRequest.userId(), orderRequest.paymentToken(), orderItems);
         publisher.publishEvent(new OrderPlacedEvent(orderDetails));
-        return orderId;
+        return order;
     }
 
 

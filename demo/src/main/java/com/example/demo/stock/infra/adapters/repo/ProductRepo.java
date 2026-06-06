@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.example.demo.stock.infra.adapters.repo.SearchProductSpecificationUtils.*;
 import static com.example.demo.stock.infra.adapters.repo.SearchProductSpecificationUtils.equalsValue;
@@ -32,19 +33,23 @@ public class ProductRepo implements ProductRepoPort {
     }
 
     @Override
-    public void saveAll(List<Product> products) {
-        productSpringRepo.saveAllAndFlush(products.stream().map(productMapper::toEntity).toList());
+    public void updateQuantities(Map<Integer,Integer> productsQuantities) {
+        var productsEntities = productSpringRepo.findAllById(productsQuantities.keySet());
+        for(ProductEntity productEntity:productsEntities){
+            productEntity.setName("cxc");
+        }
+        productSpringRepo.saveAll(productsEntities);
     }
 
     @Override
     public ProductPage searchProducts(SearchProductRequest request) {
         Specification<ProductEntity> spec = Specification.allOf(
                 includeValue("description", request.searchTerm())
-                        .or(equalsValue("name", request.searchTerm())),
+                        .or(includeValue("name", request.searchTerm())),
                 equalsValue("category", request.category()),
                 greaterThanOrEqual("price", request.minPrice()),
                 lessThanOrEqual("price", request.maxPrice()));
-      PageRequest pageRequest = PageRequest.of(request.page(), request.size(), Sort.by(request.sort(), request.direction()));
+      PageRequest pageRequest = PageRequest.of(request.page(), request.size(), Sort.by(Sort.Direction.fromString(request.direction().toUpperCase()),request.sort()));
        return productMapper.toModel(productSpringRepo.findAll(spec,pageRequest));
     }
 

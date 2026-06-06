@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Order {
-
+    private Integer id;
     private List<OrderedItem> items;
     private BigDecimal totalPrice;
     private BigDecimal totalBeforeDiscount;
@@ -95,4 +95,11 @@ public class Order {
     }
 
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

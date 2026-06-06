@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StockService implements StockServicePort {
@@ -39,7 +41,8 @@ public class StockService implements StockServicePort {
                 validate(item, product);
                 product.setAmountInStock(product.getAmountInStock() - item.quantity());
             }
-            productRepoPort.saveAll(products);
+       Map<Integer,Integer> productsQuantities = products.stream().collect(Collectors.toMap(Product::getId,Product::getAmountInStock));
+       productRepoPort.updateQuantities(productsQuantities);
             publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails));
 
     }
@@ -55,8 +58,8 @@ public class StockService implements StockServicePort {
                     product.setAmountInStock(product.getAmountInStock() + item.quantity())
             );
         }
-
-        productRepoPort.saveAll(products);
+        Map<Integer,Integer> productsQuantities = products.stream().collect(Collectors.toMap(Product::getId,Product::getAmountInStock));
+        productRepoPort.updateQuantities(productsQuantities);
         publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), message));
     }
 

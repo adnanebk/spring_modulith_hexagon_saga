@@ -1,9 +1,11 @@
 package com.example.demo.order.ports.in;
 
+import com.example.demo.order.domain.Order;
+
 public interface OrderServicePort {
 
 
-    Integer placeOrder(OrderRequest orderRequest);
+    Order placeOrder(OrderRequest orderRequest);
 
     void cancelOrder(Integer orderId, String message);
 
