@@ -1,5 +1,6 @@
 package com.example.demo.coupon.domain.validators;
 
+import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.coupon.domain.ApplyCouponRequest;
 import com.example.demo.coupon.domain.CouponRule;
 import com.example.demo.coupon.domain.RuleType;
@@ -21,7 +22,11 @@ public class CouponRuleValidator {
     }
 
     public boolean validate(CouponRule couponRule, ApplyCouponRequest applyCouponRequest) {
-        return map.get(couponRule.getType()).validate(applyCouponRequest, couponRule.getValue());
+        RuleValidator ruleValidator = map.get(couponRule.getType());
+        if (ruleValidator == null) {
+            throw new IllegalStateException("Invalid rule type: " + couponRule.getType());
+        }
+        return ruleValidator.validate(applyCouponRequest, couponRule.getValue());
     }
 
 }
