@@ -60,8 +60,11 @@ Each step publishes events that trigger the next step in the saga, with compensa
 - Event-driven communication between modules
 - Saga pattern for distributed transaction management
 - Hexagonal architecture with ports and adapters
-- REST API for order placement
+- REST API for order placement and retrieval
+- Product catalog with search, filtering, and pagination
+- Product management with partial update support
 - Discount coupon system with validation rules (minimum amount, once per user, expiration)
+- Global exception handling with custom business exceptions
 - Automatic event publication and consumption
 - Transactional data consistency within modules
 
@@ -101,49 +104,28 @@ src/main/java/com/example/demo/
 ├── common/                 # Shared components
 │   ├── data/              # Data transfer objects
 │   ├── enums/             # Common enumerations
-│   └── events/            # Domain events
+│   ├── events/            # Domain events
+│   └── exceptions/        # Global exception handling
 ├── order/                 # Order module
 │   ├── application/       # Order use cases
 │   ├── domain/           # Order entities and value objects
 │   ├── infra/            # Infrastructure adapters
-│   │   ├── adapters/     # Controllers, listeners, mappers
+│   │   ├── adapters/     # Controllers, listeners, mappers, clients
 │   │   ├── dto/          # Data transfer objects
 │   │   └── entities/     # JPA entities
 │   └── ports/            # Input/Output ports
-├── stock/                # Stock module
-│   ├── application/
-│   ├── domain/
-│   ├── infra/
-│   └── ports/
-├── payment/              # Payment module
-│   ├── application/
-│   ├── domain/
-│   ├── infra/
-│   └── ports/
-├── shipping/             # Shipping module
-│   ├── application/
-│   ├── domain/
-│   ├── infra/
-│   └── ports/
-└── coupon/               # Coupon module
-    ├── application/      # Coupon use cases
-    ├── domain/          # Coupon entities and value objects
-    ├── infra/           # Infrastructure adapters
-    │   ├── adapters/    # Repository adapters, mappers
-    │   └── entities/    # JPA entities
-    └── ports/           # Input/Output ports
+...
 ```
 
 ## API Endpoints
 
 ### Place Order
 
-**POST** `/orders`
+**POST** `/api/v1/orders`
 
 Request body:
 ```json
 {
-  "userId": 1,
   "paymentToken": "token123",
   "couponCode": "SAVE10",
   "items": [
@@ -157,10 +139,117 @@ Request body:
 
 Response:
 ```json
-123
+{
+  "id": 123,
+  "userId": 1,
+  "status": "PENDING",
+  "totalAmount": 100.00,
+  "discountAmount": 10.00,
+  "finalAmount": 90.00,
+  "paymentToken": "token123",
+  "couponCode": "SAVE10",
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2,
+      "unitPrice": 50.00,
+      "totalPrice": 100.00
+    }
+  ],
+  "createdAt": "2024-01-01T00:00:00"
+}
 ```
 
-Returns the order ID.
+### Get Orders by User
+
+**GET** `/api/v1/orders`
+
+Response:
+```json
+[
+  {
+    "id": 123,
+    "userId": 1,
+    "status": "COMPLETED",
+    "totalAmount": 100.00,
+    "discountAmount": 10.00,
+    "finalAmount": 90.00,
+    "paymentToken": "token123",
+    "couponCode": "SAVE10",
+    "items": [],
+    "createdAt": "2024-01-01T00:00:00"
+  }
+]
+```
+
+### Search Products
+
+**GET** `/api/v1/products`
+
+Query parameters:
+- `page` (default: 0) - Page number
+- `size` (default: 10) - Page size
+- `sort` (default: "id") - Sort field
+- `direction` (default: "asc") - Sort direction (asc/desc)
+- `searchTerm` (optional) - Search term for product name
+- `category` (optional) - Filter by category
+- `minPrice` (optional) - Minimum price filter
+- `maxPrice` (optional) - Maximum price filter
+
+Response:
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "Product Name",
+      "description": "Product description",
+      "price": 50.00,
+      "category": "Electronics",
+      "stock": 100
+    }
+  ],
+  "page": 0,
+  "size": 10,
+  "totalElements": 100,
+  "totalPages": 10
+}
+```
+
+### Update Product
+
+**PATCH** `/api/v1/products/{id}`
+
+Request body:
+```json
+{
+  "name": "Updated Name",
+  "price": 55.00,
+  "stock": 15
+}
+```
+
+### Apply Coupon
+
+**POST** `/api/v1/coupons/{couponCode}/applications`
+
+Request body:
+```json
+{
+  "userId": 1,
+  "amount": 100.00
+}
+```
+
+Response:
+```json
+{
+  "discountType": "PERCENTAGE",
+  "discountValue": 10.00,
+  "originalAmount": 100.00,
+  "discountAmount": 90.00
+}
+```
 
 ## Coupon Module
 
