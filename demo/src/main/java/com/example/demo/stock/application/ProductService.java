@@ -1,6 +1,7 @@
 package com.example.demo.stock.application;
 
 
+import com.example.demo.stock.domain.ProductChangeRequest;
 import com.example.demo.stock.domain.SearchProductRequest;
 import com.example.demo.stock.domain.page.ProductPage;
 import com.example.demo.stock.ports.in.ProductServicePort;
@@ -22,5 +23,11 @@ public class ProductService implements ProductServicePort {
     @Override
     public ProductPage searchProducts(SearchProductRequest request) {
         return productRepoPort.searchProducts(request) ;
+    }
+
+    @Override
+    @Transactional
+    public void partialUpdate(ProductChangeRequest changeRequest) {
+        productRepoPort.partialUpdate(changeRequest);
     }
 }

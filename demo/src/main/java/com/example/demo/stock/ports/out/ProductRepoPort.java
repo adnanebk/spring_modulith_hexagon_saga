@@ -1,6 +1,7 @@
 package com.example.demo.stock.ports.out;
 
 import com.example.demo.stock.domain.Product;
+import com.example.demo.stock.domain.ProductChangeRequest;
 import com.example.demo.stock.domain.SearchProductRequest;
 import com.example.demo.stock.domain.page.ProductPage;
 
@@ -14,4 +15,6 @@ public interface ProductRepoPort {
     void updateQuantities(Map<Integer,Integer> productsQuantities);
 
     ProductPage searchProducts(SearchProductRequest request);
+
+    void partialUpdate(ProductChangeRequest changeRequest);
 }

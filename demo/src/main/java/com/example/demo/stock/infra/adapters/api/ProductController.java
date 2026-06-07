@@ -1,13 +1,13 @@
 package com.example.demo.stock.infra.adapters.api;
 
 
+import com.example.demo.stock.domain.ProductChangeRequest;
+import com.example.demo.stock.infra.adapters.mappers.ProductMapper;
 import com.example.demo.stock.domain.SearchProductRequest;
 import com.example.demo.stock.domain.page.ProductPage;
+import com.example.demo.stock.infra.dto.ProductPatchRequest;
 import com.example.demo.stock.ports.in.ProductServicePort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -16,9 +16,11 @@ import java.math.BigDecimal;
 public class ProductController {
 
     private final ProductServicePort productService;
+    private final ProductMapper productMapper;
 
-    public ProductController(ProductServicePort productService) {
+    public ProductController(ProductServicePort productService, ProductMapper productMapper) {
         this.productService = productService;
+        this.productMapper = productMapper;
     }
 
     @GetMapping
@@ -34,4 +36,12 @@ public class ProductController {
     ) {
         return productService.searchProducts(new SearchProductRequest(searchTerm, category, minPrice, maxPrice, page, size, sort, direction));
     }
+
+    @PatchMapping("/{id}")
+    public void patchProduct(@PathVariable Integer id,@RequestBody ProductPatchRequest request) {
+       ProductChangeRequest changeRequest =  productMapper.toProductChangeRequest(id,request);
+       productService.partialUpdate(changeRequest);
+
+    }
+
 }

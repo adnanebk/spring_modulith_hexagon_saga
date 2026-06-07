@@ -1,6 +1,8 @@
 package com.example.demo.stock.infra.adapters.repo;
 
+import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.stock.domain.Product;
+import com.example.demo.stock.domain.ProductChangeRequest;
 import com.example.demo.stock.domain.SearchProductRequest;
 import com.example.demo.stock.domain.page.ProductPage;
 import com.example.demo.stock.infra.adapters.mappers.ProductMapper;
@@ -53,6 +55,16 @@ public class ProductRepo implements ProductRepoPort {
        return productMapper.toModel(productSpringRepo.findAll(spec,pageRequest));
     }
 
+    @Override
+    public void partialUpdate(ProductChangeRequest changeRequest) {
+        ProductEntity productEntity = productSpringRepo.findById(changeRequest.getId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        changeRequest.getName().applyIfPresent(productEntity::setName);
+        changeRequest.getPrice().applyIfPresent(productEntity::setPrice);
+        changeRequest.getDescription().applyIfPresent(productEntity::setDescription);
+        changeRequest.getAmountInStock().applyIfPresent(productEntity::setAmountInStock);
+        productSpringRepo.save(productEntity);
+    }
 
 
 }
