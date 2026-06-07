@@ -7,10 +7,7 @@ import com.example.demo.order.infra.dto.OrderDto;
 import com.example.demo.order.infra.dto.OrderInputDto;
 import com.example.demo.order.ports.in.OrderRequest;
 import com.example.demo.order.ports.in.OrderServicePort;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,9 +25,17 @@ public class OrderController {
 
     @PostMapping
     public OrderDto placeOrder(@RequestBody OrderInputDto orderInputDto) {
+        Integer userId = 1; // TODO: get user id from security context
         List<OrderedItem> orderItems = orderInputDto.items().stream()
                 .map(item -> new OrderedItem(item.productId(), item.quantity())).toList();
-        Order order = orderService.placeOrder(new OrderRequest(orderInputDto.userId(), orderItems, orderInputDto.paymentToken(), orderInputDto.couponCode()));
-     return new OrderDto(order.getId(), order.getTotalPrice(), order.getTotalBeforeDiscount());
+        Order order = orderService.placeOrder(new OrderRequest(userId, orderItems, orderInputDto.paymentToken(), orderInputDto.couponCode()));
+     return  orderMapper.toDto(order);
+    }
+
+
+    @GetMapping
+    public List<OrderDto> getOrder() {
+        Integer userId = 1; // TODO: get user id from security context
+        return orderService.getOrderByUserId(userId).stream().map(orderMapper::toDto).toList();
     }
 }

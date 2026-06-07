@@ -22,7 +22,7 @@ public class OrderEntity {
     @JoinColumn(name = "order_id")
     private List<ItemEntity> items;
     private BigDecimal totalPrice;
-    private BigDecimal totalWithDiscount;
+    private BigDecimal totalBeforeDiscount;
 
 
     private OrderStatus status;
@@ -94,12 +94,12 @@ public class OrderEntity {
         this.userId = userId;
     }
 
-    public BigDecimal getTotalWithDiscount() {
-        return totalWithDiscount;
+    public BigDecimal getTotalBeforeDiscount() {
+        return totalBeforeDiscount;
     }
 
-    public void setTotalWithDiscount(BigDecimal totalWithDiscount) {
-        this.totalWithDiscount = totalWithDiscount;
+    public void setTotalBeforeDiscount(BigDecimal totalBeforeDiscount) {
+        this.totalBeforeDiscount = totalBeforeDiscount;
     }
 
     public String getCouponCode() {

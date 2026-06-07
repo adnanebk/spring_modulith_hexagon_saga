@@ -3,6 +3,7 @@ package com.example.demo.order.infra.adapters.mappers;
 
 import com.example.demo.common.data.OrderedItem;
 import com.example.demo.order.domain.OrderItem;
+import com.example.demo.order.infra.dto.OrderItemDto;
 import com.example.demo.order.infra.dto.OrderItemInputDto;
 import com.example.demo.order.infra.entities.ItemEntity;
 import org.springframework.beans.BeanUtils;
@@ -26,5 +27,13 @@ public class ItemMapper {
         OrderItem orderItem = new OrderItem();
         BeanUtils.copyProperties(orderItemInputDto, orderItem);
         return orderItem;
+    }
+
+    public OrderItemDto toDto(OrderedItem item) {
+        return new OrderItemDto("", item.quantity(), item.price());
+    }
+
+    public OrderedItem toOrderedItem(ItemEntity itemEntity) {
+        return new OrderedItem(itemEntity.getProductId(), itemEntity.getProductId(), itemEntity.getPrice());
     }
 }

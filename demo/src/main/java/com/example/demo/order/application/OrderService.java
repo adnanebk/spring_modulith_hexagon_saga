@@ -86,6 +86,11 @@ public class OrderService implements OrderServicePort {
             discountClientPort.saveCouponUsage(new CouponCodeUsage(userId, orderId, coupon));
         });
     }
+    @Transactional(readOnly = true)
+    @Override
+    public List<Order> getOrderByUserId(Integer userId) {
+        return orderRepoPort.findByUserId(userId);
+    }
     private void validate(OrderRequest orderRequest) {
 
         if (CollectionUtils.isEmpty(orderRequest.orderItems()))

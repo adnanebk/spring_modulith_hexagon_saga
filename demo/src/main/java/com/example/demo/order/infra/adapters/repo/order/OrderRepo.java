@@ -7,6 +7,7 @@ import com.example.demo.order.infra.entities.OrderEntity;
 import com.example.demo.order.ports.out.OrderRepoPort;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -36,6 +37,11 @@ public class OrderRepo implements OrderRepoPort {
     @Override
     public Optional<String> findCouponCodeById(Integer id) {
         return orderSpringRepo.findCouponCodeById(id);
+    }
+
+    @Override
+    public List<Order> findByUserId(Integer userId) {
+        return  orderSpringRepo.findByUserIdJoinItems(userId).stream().map(orderMapper::toModel).toList();
     }
 
 

@@ -2,6 +2,7 @@ package com.example.demo.order.infra.adapters.mappers;
 
 
 import com.example.demo.order.domain.Order;
+import com.example.demo.order.infra.dto.OrderDto;
 import com.example.demo.order.infra.entities.OrderEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -23,4 +24,15 @@ public class OrderMapper {
         return orderEntity;
     }
 
+    public Order toModel(OrderEntity orderEntity) {
+        Order order = new Order();
+        BeanUtils.copyProperties(orderEntity, order);
+        order.setItems(orderEntity.getItems().stream().map(itemMapper::toOrderedItem).collect(Collectors.toList()));
+        return order;
+    }
+
+    public OrderDto toDto(Order order) {
+        return new OrderDto(order.getId(), order.getTotalPrice(), order.getTotalBeforeDiscount(), order.getCouponCode(),
+                order.getItems().stream().map(itemMapper::toDto).collect(Collectors.toList()));
+    }
 }
