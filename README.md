@@ -68,6 +68,18 @@ Each step publishes events that trigger the next step in the saga, with compensa
 - Automatic event publication and consumption
 - Transactional data consistency within modules
 
+## Optimization techniques
+
+- Caching
+- Entity graph to avoid n+1 query
+- Indexing
+- Pagination
+- Virtual threads for async processing
+
+## Consistency techniques
+
+- Optimistic locking for stock reservation
+
 ## Getting Started
 
 ### Prerequisites
