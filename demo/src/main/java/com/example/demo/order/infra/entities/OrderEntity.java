@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(indexes = {@Index(columnList = "userId",name = "idx_userId")})
 public class OrderEntity {
 
     @Id
