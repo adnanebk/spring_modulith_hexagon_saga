@@ -3,6 +3,7 @@ package com.example.demo.coupon.infra.adapters.repo.coupon;
 import com.example.demo.coupon.domain.Coupon;
 import com.example.demo.coupon.infra.adapters.mappers.CouponMapper;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class CouponRepository implements CouponRepositoryPort {
     }
 
     @Override
+    @Cacheable(value = "coupon", key = "#couponCode")
     public Optional<Coupon> findByCode(String couponCode) {
         return couponSpringRepo.findByCode(couponCode).map(couponMapper::toDomain);
     }

@@ -76,7 +76,6 @@ public class CouponService implements CouponServicePort {
             );
         }
     }
-    @Cacheable(value = "coupon", key = "#couponCode")
     private Coupon findCouponByCode(String couponCode) {
         return couponRepositoryPort.findByCode(couponCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Coupon code not found"));
