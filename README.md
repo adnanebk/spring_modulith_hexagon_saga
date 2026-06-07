@@ -74,6 +74,7 @@ Each step publishes events that trigger the next step in the saga, with compensa
 - Entity graph to avoid n+1 query
 - Indexing
 - Pagination
+- Batch processing for updates and inserts
 - Virtual threads for async processing
 
 ## Consistency techniques
