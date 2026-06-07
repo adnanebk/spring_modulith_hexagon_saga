@@ -5,6 +5,8 @@ import com.example.demo.order.domain.OrderStatus;
 import com.example.demo.order.infra.adapters.mappers.OrderMapper;
 import com.example.demo.order.infra.entities.OrderEntity;
 import com.example.demo.order.ports.out.OrderRepoPort;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class OrderRepo implements OrderRepoPort {
 
 
     @Override
+    @CacheEvict(value = "orders", key = "#order.userId")
     public Integer create(Order order) {
         OrderEntity entity = orderMapper.toEntity(order);
         return  orderSpringRepo.save(entity).getId();
@@ -40,6 +43,7 @@ public class OrderRepo implements OrderRepoPort {
     }
 
     @Override
+    @Cacheable(value = "orders", key = "#userId")
     public List<Order> findByUserId(Integer userId) {
         return  orderSpringRepo.findByUserIdJoinItems(userId).stream().map(orderMapper::toModel).toList();
     }

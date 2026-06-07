@@ -10,6 +10,7 @@ import com.example.demo.coupon.domain.validators.CouponRuleValidator;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
 import com.example.demo.coupon.ports.CouponServicePort;
 import com.example.demo.coupon.ports.CouponUsageRepositoryPort;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +76,7 @@ public class CouponService implements CouponServicePort {
             );
         }
     }
+    @Cacheable(value = "coupon", key = "#couponCode")
     private Coupon findCouponByCode(String couponCode) {
         return couponRepositoryPort.findByCode(couponCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Coupon code not found"));
