@@ -153,12 +153,8 @@ Response:
 ```json
 {
   "id": 123,
-  "userId": 1,
-  "status": "PENDING",
-  "totalAmount": 100.00,
-  "discountAmount": 10.00,
-  "finalAmount": 90.00,
-  "paymentToken": "token123",
+  "totalPrice": 90.00,
+  "totalBeforeDiscount": 100.00,
   "couponCode": "SAVE10",
   "items": [
     {
@@ -168,7 +164,6 @@ Response:
       "totalPrice": 100.00
     }
   ],
-  "createdAt": "2024-01-01T00:00:00"
 }
 ```
 
@@ -180,16 +175,17 @@ Response:
 ```json
 [
   {
-    "id": 123,
-    "userId": 1,
-    "status": "COMPLETED",
-    "totalAmount": 100.00,
-    "discountAmount": 10.00,
-    "finalAmount": 90.00,
-    "paymentToken": "token123",
-    "couponCode": "SAVE10",
-    "items": [],
-    "createdAt": "2024-01-01T00:00:00"
+  "id": 123,
+  "totalPrice": 90.00,
+  "totalBeforeDiscount": 100.00,
+  "couponCode": "SAVE10",
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2,
+      "unitPrice": 50.00,
+      "totalPrice": 100.00
+    }]
   }
 ]
 ```
