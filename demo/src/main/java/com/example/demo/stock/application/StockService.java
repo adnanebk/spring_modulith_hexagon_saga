@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class StockService implements StockServicePort {
    @Transactional
     @Override
     public void updateProductQuantity(OrderDetails orderDetails) {
+        try{
         List<OrderedItem> items = orderDetails.items();
         List<Product> products = getCorrespondingProducts(items);
             for (OrderedItem item : items) {
@@ -43,7 +45,12 @@ public class StockService implements StockServicePort {
             }
        Map<Integer,Integer> productsQuantities = products.stream().collect(Collectors.toMap(Product::getId,Product::getAmountInStock));
        productRepoPort.updateQuantities(productsQuantities);
-            publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails));
+        publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails));
+        }catch (Exception e){
+          publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), e.getMessage()));
+          TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+       }
 
     }
 
@@ -63,12 +70,6 @@ public class StockService implements StockServicePort {
         publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), message));
     }
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void cancelUpdateQuantity(Integer orderId, String message){
-        publisher.publishEvent(new OrderStockFailedEvent(orderId, message));
-
-    }
 
     @Override
     public List<ProductInStock> getProducts(List<Integer> productIds) {

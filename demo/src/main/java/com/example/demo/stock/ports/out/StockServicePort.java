@@ -10,7 +10,5 @@ public interface StockServicePort {
 
     void rollbackProductQuantity(OrderDetails items, String message);
 
-    void cancelUpdateQuantity(Integer orderId, String message);
-
     List<ProductInStock> getProducts(List<Integer> productIds);
 }
