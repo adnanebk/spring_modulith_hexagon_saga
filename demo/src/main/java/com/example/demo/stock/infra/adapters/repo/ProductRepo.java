@@ -40,7 +40,7 @@ public class ProductRepo implements ProductRepoPort {
         for(ProductEntity productEntity:productsEntities){
             productEntity.setAmountInStock(productsQuantities.get(productEntity.getId()));
         }
-        productSpringRepo.saveAllAndFlush(productsEntities);
+        productSpringRepo.saveAll(productsEntities);
     }
 
     @Override

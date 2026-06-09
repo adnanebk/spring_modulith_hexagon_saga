@@ -11,4 +11,6 @@ public interface StockServicePort {
     void rollbackProductQuantity(OrderDetails items, String message);
 
     List<ProductInStock> getProducts(List<Integer> productIds);
+
+    void cancelProductReservation(Exception e, OrderDetails orderDetails);
 }

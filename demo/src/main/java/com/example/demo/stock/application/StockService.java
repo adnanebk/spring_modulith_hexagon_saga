@@ -12,9 +12,7 @@ import com.example.demo.stock.ports.out.ProductRepoPort;
 import com.example.demo.stock.ports.out.StockServicePort;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Map;
@@ -31,10 +29,9 @@ public class StockService implements StockServicePort {
         this.publisher = publisher;
     }
 
-   @Transactional
     @Override
+    @Transactional
     public void updateProductQuantity(OrderDetails orderDetails) {
-        try{
         List<OrderedItem> items = orderDetails.items();
         List<Product> products = getCorrespondingProducts(items);
             for (OrderedItem item : items) {
@@ -46,11 +43,6 @@ public class StockService implements StockServicePort {
        Map<Integer,Integer> productsQuantities = products.stream().collect(Collectors.toMap(Product::getId,Product::getAmountInStock));
        productRepoPort.updateQuantities(productsQuantities);
         publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails));
-        }catch (Exception e){
-          publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), e.getMessage()));
-          TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
-       }
 
     }
 
@@ -75,7 +67,11 @@ public class StockService implements StockServicePort {
     public List<ProductInStock> getProducts(List<Integer> productIds) {
         return productRepoPort.getAllByIds(productIds).stream().map(p -> new ProductInStock(p.getId(), p.getPrice(), p.getAmountInStock())).toList();
     }
-
+    @Override
+    @Transactional
+    public void cancelProductReservation(Exception e, OrderDetails orderDetails) {
+        publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), e.getMessage()));
+    }
     private void validate(OrderedItem item, Product product) {
         if (product.getAmountInStock() < item.quantity()) {
             throw new BusinessException("Not enough stock for product " + item.productId());
