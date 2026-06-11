@@ -35,7 +35,7 @@ public class OrderListener {
 
     @ApplicationModuleListener
     public void handle(OrderShippedEvent event){
-        orderService.completeOrder(event.orderDetails().orderId(),event.orderDetails().userId());
+        orderService.completeOrder(event.orderDetails());
     }
 
 

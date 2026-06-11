@@ -1,5 +1,6 @@
 package com.example.demo.order.ports.in;
 
+import com.example.demo.common.data.OrderDetails;
 import com.example.demo.order.domain.Order;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface OrderServicePort {
 
     void cancelOrder(Integer orderId, String message);
 
-    void completeOrder(Integer orderId, Integer userId);
+    void completeOrder(OrderDetails orderDetails);
 
     List<Order> getOrderByUserId(Integer userId);
 }

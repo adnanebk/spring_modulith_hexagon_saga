@@ -19,7 +19,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({BusinessException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleBusinessException(BusinessException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Bad client request");

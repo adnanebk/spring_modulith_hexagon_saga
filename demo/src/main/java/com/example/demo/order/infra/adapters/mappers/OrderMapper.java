@@ -32,7 +32,8 @@ public class OrderMapper {
     }
 
     public OrderDto toDto(Order order) {
+        // todo reafactor the mapper
         return new OrderDto(order.getId(), order.getTotalPrice(), order.getTotalBeforeDiscount(), order.getCouponCode(),
-                order.getItems().stream().map(itemMapper::toDto).collect(Collectors.toList()));
+                order.getItems().stream().map(itemMapper::toDto).collect(Collectors.toList()), order.getStatus());
     }
 }

@@ -4,15 +4,14 @@ import com.example.demo.common.exceptions.BusinessException;
 import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.coupon.domain.AppliedCouponSummary;
 import com.example.demo.coupon.domain.Coupon;
-import com.example.demo.coupon.domain.CouponCodeUsage;
 import com.example.demo.coupon.domain.CouponUsage;
 import com.example.demo.coupon.domain.validators.CouponRuleValidator;
 import com.example.demo.coupon.ports.CouponRepositoryPort;
 import com.example.demo.coupon.ports.CouponServicePort;
 import com.example.demo.coupon.ports.CouponUsageRepositoryPort;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -59,10 +58,13 @@ public class CouponService implements CouponServicePort {
 
     @Transactional
     @Override
-    public void saveCouponUsage(CouponCodeUsage couponCodeUsage) {
-        Integer couponId = findCouponByCode(couponCodeUsage.couponCode()).getId();
-        CouponUsage couponUsage = new CouponUsage(couponId,couponCodeUsage.orderId(),couponCodeUsage.userId());
-        couponUsageRepositoryPort.save(couponUsage);
+    public void saveCouponUsage(Integer orderId, Integer userId,String couponCode) {
+        if(StringUtils.hasText(couponCode)){
+            Integer couponId = findCouponByCode(couponCode).getId();
+            CouponUsage couponUsage = new CouponUsage(couponId,orderId,userId);
+            couponUsageRepositoryPort.save(couponUsage);
+        }
+
     }
 
 

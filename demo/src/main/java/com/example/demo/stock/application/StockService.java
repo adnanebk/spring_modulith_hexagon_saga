@@ -5,7 +5,6 @@ import com.example.demo.common.data.OrderedItem;
 import com.example.demo.common.events.OrderProductStockVerifiedEvent;
 import com.example.demo.common.events.OrderStockFailedEvent;
 import com.example.demo.common.exceptions.BusinessException;
-import com.example.demo.common.exceptions.ResourceNotFoundException;
 import com.example.demo.stock.domain.Product;
 import com.example.demo.stock.domain.ProductInStock;
 import com.example.demo.stock.ports.out.ProductRepoPort;
@@ -14,9 +13,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,13 +33,13 @@ public class StockService implements StockServicePort {
     @Transactional
     public void updateProductQuantity(OrderDetails orderDetails) {
         List<OrderedItem> items = orderDetails.items();
-        List<Product> products = getCorrespondingProducts(items);
-            for (OrderedItem item : items) {
-                Product product = getCorrespondingProduct(item, products)
-                        .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + item.productId()));
-                validate(item, product);
-                product.setAmountInStock(product.getAmountInStock() - item.quantity());
-            }
+        Map<Integer,OrderedItem> itemsMap = items.stream().collect(Collectors.toMap(OrderedItem::productId, Function.identity()));
+        List<Product> products = productRepoPort.getAllByIds(new ArrayList<>(itemsMap.keySet()));
+        products.forEach(product -> {
+            OrderedItem orderedItem = itemsMap.get(product.getId());
+            validateQuantity(orderedItem, product);
+            product.setAmountInStock(product.getAmountInStock() - orderedItem.quantity());
+        });
        Map<Integer,Integer> productsQuantities = products.stream().collect(Collectors.toMap(Product::getId,Product::getAmountInStock));
        productRepoPort.updateQuantities(productsQuantities);
         publisher.publishEvent(new OrderProductStockVerifiedEvent(orderDetails));
@@ -50,13 +50,11 @@ public class StockService implements StockServicePort {
     @Override
     public void rollbackProductQuantity(OrderDetails orderDetails, String message) {
         List<OrderedItem> items = orderDetails.items();
-        List<Product> products = getCorrespondingProducts(items);
-
-        for (OrderedItem item : items) {
-            getCorrespondingProduct(item, products).ifPresent(product ->
-                    product.setAmountInStock(product.getAmountInStock() + item.quantity())
-            );
-        }
+        Map<Integer,OrderedItem> itemsMap = items.stream().collect(Collectors.toMap(OrderedItem::productId, Function.identity()));
+        List<Product> products = productRepoPort.getAllByIds(new ArrayList<>(itemsMap.keySet()));
+        products.forEach(product -> {
+            product.setAmountInStock(product.getAmountInStock() + itemsMap.get(product.getId()).quantity());
+        });
         Map<Integer,Integer> productsQuantities = products.stream().collect(Collectors.toMap(Product::getId,Product::getAmountInStock));
         productRepoPort.updateQuantities(productsQuantities);
         publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), message));
@@ -72,17 +70,9 @@ public class StockService implements StockServicePort {
     public void cancelProductReservation(Exception e, OrderDetails orderDetails) {
         publisher.publishEvent(new OrderStockFailedEvent(orderDetails.orderId(), e.getMessage()));
     }
-    private void validate(OrderedItem item, Product product) {
+    private void validateQuantity(OrderedItem item, Product product) {
         if (product.getAmountInStock() < item.quantity()) {
             throw new BusinessException("Not enough stock for product " + item.productId());
         }
-    }
-
-    private List<Product> getCorrespondingProducts(List<OrderedItem> items) {
-        return productRepoPort.getAllByIds(items.stream().map(OrderedItem::productId).toList());
-    }
-
-    private Optional<Product> getCorrespondingProduct(OrderedItem item, List<Product> products) {
-        return products.stream().filter(p -> p.getId().equals(item.productId())).findFirst();
     }
 }

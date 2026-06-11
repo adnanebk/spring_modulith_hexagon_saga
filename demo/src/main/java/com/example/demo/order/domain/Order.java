@@ -15,17 +15,18 @@ public class Order {
     private OrderStatus status;
     private String couponCode;
 
-    public static Order create(Integer userId, List<OrderedItem> orderedItems) {
+    public static Order create(Integer userId, List<OrderedItem> items) {
         Order order = new Order();
         order.setUserId(userId);
-        order.setItems(orderedItems);
+        order.setItems(items);
         order.setStatus(OrderStatus.PENDING);
-        order.calculateTotalPrice();
+        order.setTotalPrice(order.calculateTotalPrice());
+
         return order;
     }
 
-    public void calculateTotalPrice() {
-        this.totalPrice = this.items.stream()
+    public BigDecimal calculateTotalPrice() {
+        return this.items.stream()
                 .map(item->item.price().multiply(BigDecimal.valueOf(item.quantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -34,6 +35,7 @@ public class Order {
         this.totalPrice = amountAfterDiscount;
         this.couponCode = couponCode;
     }
+
     public OrderStatus getStatus() {
         return status;
     }

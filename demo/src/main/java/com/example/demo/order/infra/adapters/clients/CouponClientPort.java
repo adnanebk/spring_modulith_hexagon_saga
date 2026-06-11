@@ -1,6 +1,5 @@
 package com.example.demo.order.infra.adapters.clients;
 
-import com.example.demo.coupon.domain.CouponCodeUsage;
 import com.example.demo.coupon.ports.CouponServicePort;
 import com.example.demo.order.ports.out.DiscountClientPort;
 import org.springframework.stereotype.Component;
@@ -17,10 +16,6 @@ public class CouponClientPort implements DiscountClientPort {
         this.couponServicePort = couponServicePort;
     }
 
-    @Override
-    public void saveCouponUsage(CouponCodeUsage couponCodeUsage) {
-        couponServicePort.saveCouponUsage(couponCodeUsage);
-    }
 
     @Override
     public BigDecimal discount(Integer userId,String couponCode, BigDecimal totalAmount) {
