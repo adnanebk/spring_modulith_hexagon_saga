@@ -96,9 +96,8 @@ public class OrderService implements OrderServicePort {
                 item.withPrice(productsMap.get(item.productId()).price())).toList();
     }
     private List<ProductInStock> getProductsInStock(List<OrderedItem> orderItems) {
-        Map<Integer, Integer> productQuantityMap = orderItems.stream()
-                .collect(Collectors.toMap(OrderedItem::productId, OrderedItem::quantity));
-        return productClientPort.getProductsByIds(new ArrayList<>(productQuantityMap.keySet()));
+         List<Integer> productIds= orderItems.stream().map(OrderedItem::productId).toList();
+        return productClientPort.getProductsByIds(productIds);
     }
 
 }
